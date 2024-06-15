@@ -1,0 +1,191 @@
+/**
+ * @type {import('next').NextConfig}
+ */
+const isDev = process.env.NODE_ENV === "development";
+
+const withImages = require("next-images");
+const withPlugins = require("next-compose-plugins");
+const { withSentryConfig } = require("@sentry/nextjs");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+// const cache = require("./workbox-cache");
+// const withPWA = require("next-pwa")({
+//   dest: "public",
+//   disable: isDev,
+//   runtimeCaching: cache,
+// });
+
+const nextConfig = {
+  swcMinify: false,
+  reactStrictMode: false,
+  experimental: {
+    appDir: false,
+    optimizeCss: true,
+    browsersListForSwc: true,
+    legacyBrowsers: false,
+    forceSwcTransforms: true,
+    // concurrentFeatures: true,
+    // nextScriptWorkers: true,
+    scrollRestoration: true,
+    swcPlugins: [
+      // ["react-native-reanimated-swc-plugin"],
+      // ["@nissy-dev/swc-plugin-react-native-web", { commonjs: true }],
+    ],
+  },
+  transpilePackages: [
+    "react-native",
+    "react-native-web",
+    "app",
+    "desing-system",
+    "@showtime-xyz",
+    "@gorhom/portal",
+    "moti",
+    "zeego",
+    "sentry-expo",
+    "solito",
+    "nativewind",
+    "expo-application",
+    "expo-av",
+    "expo-asset",
+    "expo-blur",
+    "expo-clipboard",
+    "expo-constants",
+    "expo-linking",
+    "expo-dev-client",
+    "expo-device",
+    "expo-modules-core",
+    "expo-image-picker",
+    "expo-linear-gradient",
+    "expo-localization",
+    "expo-image-manipulator",
+    "expo-location",
+    "expo-mail-composer",
+    "expo-media-library",
+    "expo-status-bar",
+    "expo-system-ui",
+    "expo-web-browser",
+    "expo-file-system",
+    "react-native-reanimated",
+    "react-native-gesture-handler",
+    "react-native-svg",
+    "react-native-avoid-softinput",
+    "react-native-safe-area-context",
+    "react-native-mmkv",
+    "react-native-tab-view",
+    "universal-tooltip",
+    "react-native-image-colors",
+    "react-native-reanimated-carousel",
+    "@miblanchard/react-native-slider",
+    "react-native-track-player",
+    "expo-document-picker",
+    "react-native-compressor",
+    "expo-sharing",
+    "@gorhom/bottom-sheet",
+    "expo-video-thumbnails",
+  ],
+  webpack: (config, options) => {
+    if (!options.isServer) {
+      config.resolve.fallback = { fs: false, net: false, tls: false };
+    }
+    // Mix in aliases
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      // Alias direct react-native imports to react-native-web
+      "react-native$": "react-native-web",
+      "react-native-web/dist/cjs/exports/DrawerLayoutAndroid":
+        "react-native-web/dist/cjs/modules/UnimplementedView",
+      "react-native/Libraries/Image/AssetRegistry":
+        "react-native-web/dist/cjs/modules/AssetRegistry",
+    };
+
+    config.resolve.extensions = [
+      ".web.js",
+      ".web.jsx",
+      ".web.ts",
+      ".web.tsx",
+      ...(config.resolve?.extensions ?? []),
+    ];
+
+    if (!config.plugins) {
+      config.plugins = [];
+    }
+
+    // Expose __DEV__ from Metro.
+    config.plugins.push(
+      new options.webpack.DefinePlugin({
+        __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
+      })
+    );
+
+    // this little neat function will allow us to use `bit watch` in dev and change the code from design system without
+    // restarting next or clearing the next cache
+    // config.snapshot = {
+    //   ...(config.snapshot ?? {}),
+    //   // Add all node_modules but @showtime-xyz module to managedPaths
+    //   // Allows for hot refresh of changes to @showtime-xyz module
+    //   managedPaths: [/^(.+?[\\/]node_modules[\\/])(?!@showtime-xyz)/],
+    // };
+
+    return config;
+  },
+  typescript: {
+    ignoreDevErrors: true,
+    ignoreBuildErrors: true,
+  },
+  outputFileTracing: false, // https://github.com/vercel/next.js/issues/30601#issuecomment-961323914
+  images: {
+    disableStaticImages: true,
+    domains: [
+      "lh3.googleusercontent.com",
+      "cloudflare-ipfs.com",
+      "cdn.tryshowtime.com",
+      "storage.googleapis.com",
+      "testingservice-dot-showtimenft.wl.r.appspot.com",
+      "media.showtime.xyz",
+      "media-stage.showtime.xyz",
+      "cydjretpcgmuezpkbkql.supabase.co",
+      "via.placeholder.com",
+      "placehold.co"
+    ],
+  },
+  async headers() {
+    const cacheHeaders = [
+      { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+    ];
+    return [
+      { source: "/_next/static/:static*", headers: cacheHeaders },
+      { source: "/fonts/:font*", headers: cacheHeaders },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/@:username",
+        destination: "/profile/:username",
+      },
+      {
+        source: "/@:username/:slug",
+        destination: "/profile/:username/:slug",
+      },
+      {
+        source: "/login",
+        destination: "/?login=true",
+      },
+    ];
+  },
+};
+
+module.exports = withPlugins(
+  [
+    withImages,
+    withBundleAnalyzer,
+    !isDev ? withSentryConfig : null,
+    // withPWA,
+  ].filter(Boolean),
+  nextConfig
+);

@@ -1,0 +1,126 @@
+{
+    "hello": "హలో!",
+    "headerText": "ది నేట జోన్‌కు స్వాగతం.",
+    "subheaderText": "అత్యంతమంది నేటాని అనుసరించండి, మాయం అన్‌లాక్ చేయండి.",
+    "announcements": "గ్రూప్‌లను పరిచయం: నాగరిక-రాజకీయ అన్నీ తో కనెక్ట్ అవుతున్న హబ్.",
+    "menu": {
+        "theme": "థీమ్",
+        "home": "హోమ్",
+        "light": "లైట్",
+        "dark": "డార్క్",
+        "system": "సిస్టమ్",
+        "signout": "సైన్ ఔట్",
+        "channels": "గ్రూప్లు",
+        "search": "వెతకండి",
+        "alerts": "హెచ్చరికలు",
+        "settings": "సెట్టింగ్‌లు",
+        "create": "సృష్టించండి",
+        "signin": "సైన్ ఇన్",
+        "getApp": "యాప్ పొందండి",
+        "more": "మరిన్ని",
+        "edit": "సవరించండి"
+    },
+    "Groups": {
+        "members": "సభ్యులు",
+        "connect": "కనెక్ట్",
+        "emptyChannels": "ఇంకా కనెక్షన్‌లు లేవు",
+        "join": "కనెక్ట్"
+    },
+    "joinedChannels": {
+        "title": "కనెక్ట్ అయిన గ్రూప్‌లు",
+        "subtext": "నేటాల మరియు నాగరికతో సంభాషణలు మరియు నవీకరణలను నమోదు కాపాడుతుంది."
+    },
+    "seall": {
+        "title": "గ్రూప్లు",
+        "subtext": "నేటాల మరియు నాగరికతో సంభాషణలు మరియు నవీకరణలను ప్రవేశించండి."
+    },
+    "empty": {
+        "title": "గ్రూప్లు",
+        "subtext": "నేటాల మరియు నాగరికతో సంభాషణలు మరియు నవీకరణలను ప్రవేశించండి."
+    },
+    "popularChannelsSuggested": {
+        "title": "ప్రజా క్షేత్రంలో ప్రజాదర్శనలు",
+        "subtext": "పబ్లిక్ స్పేర్‌లో ట్రెండింగ్ విషయాలు మరియు చర్చలను దొరకండి."
+    },
+    "popularChannelsJoined": {
+        "title": "కనెక్ట్ అయిన గ్రూప్‌లు",
+        "subtext": "నేటాల మరియు నాగరికతో మీరు చేర్చిన చర్చలు."
+    },
+    "myChannelsJoined": {
+        "title": "నా గ్రూప్లు",
+        "subtext": "నేటాల మరియు నాగరికతో మీ పాటు చేసిన చర్చలు మరియు ఇంటరాక్షన్లు."
+    },
+    "locationChannelsJoined": {
+        "title": "స్థాన ఆధారిత గ్రూప్‌లు",
+        "subtext": "గ్రూప్లు లో మీ స్థానం ప్రకారం ప్రవేశించిన చర్చలు."
+    },
+    "locationChannelsSuggested": {
+        "title": "స్థాన సూచించిన గ్రూప్‌లు",
+        "subtext": "గ్రూప్లు లో మీ స్థానం ప్రకారం సూచించిన చర్చలు."
+    },
+    "editLocation": {
+        "title": "స్థాన గ్రూప్‌లు"
+    },
+    "profilePage": {
+        "exploreManifesto": "నా నీతిలను చూడండి",
+        "chat": "సందేశం",
+        "exploreChannel": "ఆధికారిక ఛానల్‌ను కనెక్ట్ చేయండి",
+        "donateText": "ప్రయత్నాలను మద్దతు చేయండి",
+        "donate": "డొనేట్",
+        "shareText": "నా ప్రొఫైల్‌ను షేర్ చేయండి",
+        "share": "షేర్",
+        "readmanifesto": "చదువు",
+        "followers": "అనుచరులు"
+    },
+    "homePage": {
+        "All": "అన్ని",
+        "Popular": "ప్రసిద్ధం",
+        "Legendary": "ప్రసిద్ధమైన",
+        "Historical": "చరిత్రాత్మకం"
+    },
+    "GOATs": "కనెక్షన్లు",
+    "GOAT": "కనెక్షన్",
+    "EmptyDataHome": "ఇంకా కనెక్షన్‌లు లేవు",
+    "SearchPlaceholder": "@యూజర్ పేరు లేదా రాజకీయ నేమం కోసం వెతకండి",
+    "Status": "స్థితి",
+    "SelectChannelMessage": "చర్చను ఎంచుకోండి!",
+    "SelectChannelSubMessage": "సంభాషణలకు ప్రవేశించడానికి, ట్రెండింగ్ చర్చలను అన్వేషించండి లేదా ఒక సంభాషణ ప్రారంభించండి.",
+    "Follow": "అనుసరించు",
+    "Joined": "చేరింది",
+    "Join": "చేరండి",
+    "Cancel": "రద్దు చేయండి",
+    "Unfollow {{name}}?": "{{name}} ను అనుసరించాలా?",
+    "Leave {{name}}?": "{{name}} ను వదిలించాలా?",
+    "Location not available": "స్థానం అందుబాటులో లేదు",
+    "netaType": {
+        "primeMinister": "ప్రధాన మంత్రి",
+        "president": "ప్రెసిడెంటు",
+        "memberOfParliament": "సంసద సభ్యుడు",
+        "chiefMinister": "ముఖ్యమంత్రి",
+        "governor": "రాజ్యపాల",
+        "mayor": "మేయర్",
+        "municipalCorporator": "మునిసిపల్ కార్పొరేటర్",
+        "sarpanch": "సర్పంచ్",
+        "panchayatMember": "పంచాయత్ సభ్యుడు",
+        "memberLegislativeAssembly": "విధాన సభ సభ్యుడు",
+        "memberLegislativeCouncil": "విధాన పరిషత్ సభ్యుడు",
+        "localRepresentative": "స్థానిక ప్రతిష్ఠాత్మకుడు",
+        "politicalPartyLeader": "రాజకీయ పార్టీ నేత",
+        "oppositionLeader": "విరుద్ద నేత",
+        "neta": "నేత",
+        "service": "TService",
+        "formerOppositionLeader": "మామూలు విరుద్ద నేత",
+        "formerPoliticalPartyLeader": "మామూలు రాజకీయ పార్టీ నేత",
+        "formerMemberLegislativeCouncil": "మామూలు విధాన పరిషత్ సభ్యుడు",
+        "formerMemberLegislativeAssembly": "మామూలు విధాన సభ సభ్యుడు",
+        "formerMemberOfParliament": "మామూలు సంసద సభ్యుడు",
+        "formerPrimeMinister": "మామూలు ప్రధాన మంత్రి",
+        "formerPresident": "మామూలు ప్రెసిడెంటు",
+        "formerChiefMinister": "మామూలు ముఖ్యమంత్రి",
+        "formerGovernor": "మామూలు రాజ్యపాల",
+        "formerMayor": "మామూలు మేయర్",
+        "formerMunicipalCorporator": "మామూలు మునిసిపల్ కార్పొరేటర్",
+        "formerPanchayatMember": "మామూలు పంచాయత్ సభ్యుడు",
+        "formerSarpanch": "మామూలు సర్పంచ్"
+    }
+}

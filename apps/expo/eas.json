@@ -1,0 +1,66 @@
+{
+  "build": {
+    "production": {
+      "channel": "production",
+      "distribution": "store",
+      "ios": {
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "android": {
+        "buildType": "app-bundle",
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "env": {
+        "STAGE": "production",
+        "NODE_ENV": "production",
+        "FLIPPER_DISABLE": "1",
+        "EX_UPDATES_ANDROID_DELAY_LOAD_APP": "false"
+      },
+      "prebuildCommand": "prebuild --skip-dependency-update react",
+    },
+    "preview": {
+      "channel": "staging",
+      "distribution": "internal",
+      "ios": {
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "android": {
+        "buildType": "apk",
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "env": {
+        "STAGE": "staging",
+        "NODE_ENV": "development",
+        "FLIPPER_DISABLE": "1",
+        "EX_UPDATES_ANDROID_DELAY_LOAD_APP": "false"
+      },
+      "prebuildCommand": "prebuild --skip-dependency-update react",
+      "cache": {
+        "key": "nconnect"
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "android": {
+        "image": "latest",
+        "resourceClass": "large"
+      },
+      "env": {
+        "STAGE": "development",
+        "EX_UPDATES_ANDROID_DELAY_LOAD_APP": "false"
+      }
+    }
+  },
+  "cli": {
+    "version": ">= 0.52.0"
+  }
+}

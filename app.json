@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "scheme": {},
+    "extra": {
+      "eas": {
+        "projectId": "9acd4151-02b4-429b-bec6-79ee16d70314"
+      }
+    },
+    "android": {
+      "package": "com.nconnect.nconnect"
+    }
+  }
+}

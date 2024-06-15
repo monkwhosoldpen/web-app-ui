@@ -1,0 +1,18 @@
+# List of commits to ignore by default in `git-blame`. Add to this list
+# ONLY commits that are certain to have been functional no-ops, like
+# automated reformatting.
+#
+# To make use of this, you must set the `blame.ignoreRevsFile` Git config
+# option to point to this file. See `git help blame` and `git help config` for
+# more details.
+#
+# tldr; with git >2.23 do:
+# $ git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+17684ae7233c4abe8467074b7876533a8b334111
+ 
+7494c2506bdfe41935b7885446aca633a167e857
+
+44c0ac24e5ad76b63aab1a3e8f30f085668755ca
+
+29b011dbac221e3edc33ad3f0fce2e5181098ea7

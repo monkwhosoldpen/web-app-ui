@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "io.goatsconnect",
+            "sha256_cert_fingerprints": [
+                "B4:5B:8B:4D:D9:14:80:3C:20:1A:69:82:8C:26:2A:AF:F7:FD:89:B1:9A:07:84:78:CF:95:EC:7C:3E:56:92:8A"
+            ]
+        }
+    }
+]

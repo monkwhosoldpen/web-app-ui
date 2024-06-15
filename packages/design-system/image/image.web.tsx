@@ -1,0 +1,155 @@
+import {
+  ComponentProps,
+  CSSProperties,
+  useCallback,
+  useMemo,
+  forwardRef,
+} from "react";
+import { ImageURISource } from "react-native";
+
+// @ts-ignore
+import { getImgFromArr } from "array-to-image";
+import { decode } from "blurhash";
+import Image, { ImageProps as NextImageProps } from "next/image";
+
+import type { TW } from "@showtime-xyz/universal.tailwind";
+import { View } from "@showtime-xyz/universal.view";
+
+import { ResizeMode, ImageNativeProps, ContentFit } from "./types";
+
+const getBase64Blurhash = (blurhash: string): string => {
+  const pixels = decode(blurhash, 16, 16); // Uint8ClampedArray
+  const image = getImgFromArr(pixels, 16, 16); // HTMLImageElement
+  const src = image.src; // data:image/png;base64,iVBORw0KGgoAA...
+  return src;
+};
+
+const noop = () => {};
+
+type Props = Pick<ImageNativeProps, "source" | "onLoad" | "recyclingKey"> &
+  Omit<NextImageProps, "src"> & {
+    className: string;
+    source: ImageURISource;
+    loading?: "lazy" | "eager";
+    width: number;
+    height: number;
+    borderRadius?: number;
+    layout?: "fixed" | "intrinsic" | "responsive" | "fill";
+    alt: string; // Required from Next.js 13
+    blurhash?: string;
+    style?: CSSProperties;
+    resizeMode?: ResizeMode;
+    contentFit?: ContentFit;
+  };
+
+function Img({
+  source,
+  loading = "lazy",
+  width,
+  height,
+  resizeMode = "cover",
+  contentFit,
+  onLoad,
+  style,
+  alt,
+  onLoadingComplete: onLoadingCompleteProps,
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  recyclingKey,
+  ...props
+}: Props) {
+  const actualHeight =
+    !isNaN(height) && typeof height === "number" ? height : undefined;
+  const actualWidth =
+    !isNaN(width) && typeof width === "number" ? width : undefined;
+
+  const hasHeightOrWidth = actualHeight || actualWidth;
+
+  const onLoadingComplete = useCallback(
+    (e: HTMLImageElement) => {
+      onLoad?.({
+        cacheType: "none",
+        source: {
+          url: e.currentSrc,
+          width: e.naturalWidth,
+          height: e.naturalHeight,
+          mediaType: null,
+        },
+      });
+      onLoadingCompleteProps?.(e);
+    },
+    [onLoad, onLoadingCompleteProps]
+  );
+
+  const newProps = useMemo(() => {
+    return {
+      style: {
+        objectFit: (contentFit ?? resizeMode) as any,
+        ...style,
+      },
+      alt: alt ?? "",
+      width,
+      height,
+      fill: !hasHeightOrWidth,
+      loading,
+      priority: loading === "eager",
+      ...props,
+    };
+  }, [
+    alt,
+    contentFit,
+    hasHeightOrWidth,
+    height,
+    loading,
+    props,
+    resizeMode,
+    style,
+    width,
+  ]);
+
+  if (source?.uri && typeof source?.uri === "string") {
+    return (
+      <Image
+        src={source.uri}
+        onLoadingComplete={onLoad ? onLoadingComplete : noop}
+        placeholder={width > 40 && props.blurhash ? "blur" : "empty"}
+        blurDataURL={
+          width > 40 && props.blurhash
+            ? getBase64Blurhash(props.blurhash)
+            : undefined
+        }
+        unoptimized // We already optimize the images with our CDN
+        {...newProps}
+      />
+    );
+  }
+
+  if (typeof source === "string") {
+    return <Image src={source} {...newProps} />;
+  }
+
+  return null;
+}
+
+type ImageProps = { tw?: TW; style?: any } & ComponentProps<typeof Img>;
+
+const StyledImage = forwardRef<any, ImageProps>(
+  ({ borderRadius = 0, tw = "", ...props }, ref) => {
+    return (
+      <View
+        style={{
+          width: "inherit" as any,
+          height: "inherit" as any,
+          borderRadius,
+          overflow: "hidden",
+        }}
+        tw="w-in"
+      >
+        <Img {...props} className={Array.isArray(tw) ? tw.join(" ") : tw} />
+      </View>
+    );
+  }
+);
+
+StyledImage.displayName = "StyledImage";
+
+export { StyledImage as Image };

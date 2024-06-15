@@ -1,0 +1,60 @@
+{
+  "name": "GoatsConnect",
+  "short_name": "GoatsConnect",
+  "theme_color": "#007ACC",
+  "background_color": "#007ACC",
+  "scope": "/",
+  "intent_filters": {
+    "scope_url_scheme": "https",
+    "scope_url_host": "goatsconnect.com",
+    "scope_url_path": "/"
+  },
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://www.pwabuilder.com/assets/icons/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open Inbox",
+      "short_name": "Inbox",
+      "description": "A list of notifications received by your app",
+      "url": "/groups",
+      "icons": [
+        {
+          "src": "/assets/app-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Open Settings",
+      "short_name": "Settings",
+      "description": "Configure the settings of your app",
+      "url": "/settings",
+      "icons": [
+        {
+          "src": "/assets/app-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "splash_pages": {
+    "enabled": true,
+    "background_color": "#007ACC",
+    "icons": [
+      {
+        "src": "/assets/app-icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+}
