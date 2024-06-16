@@ -23,28 +23,28 @@ export const useBanners = () => {
       username: "JohnDoe",
       slug: "",
       link: "https://example.com",
-      image: "https://cydjretpcgmuezpkbkql.supabase.co/storage/v1/object/public/media/banners/banner1.webp?t=2024-02-19T03%3A09%3A02.508Z",
+      image: "https://via.placeholder.com/300/FF0000/FFFFFF?text=Banner1",
     },
     {
       type: "profile",
       username: "JohnDoe",
       slug: "",
       link: "https://example.com",
-      image: "https://cydjretpcgmuezpkbkql.supabase.co/storage/v1/object/public/media/banners/banner2.webp",
+      image: "https://via.placeholder.com/300/00FF00/FFFFFF?text=Banner2",
     },
     {
       type: "profile",
       username: "JohnDoe",
       slug: "",
       link: "https://example.com",
-      image: "https://cydjretpcgmuezpkbkql.supabase.co/storage/v1/object/public/media/banners/banner4.webp",
+      image: "https://via.placeholder.com/300/0000FF/FFFFFF?text=Banner3",
     },
     {
       type: "profile",
       username: "JohnDoe",
       slug: "",
       link: "https://example.com",
-      image: "https://cydjretpcgmuezpkbkql.supabase.co/storage/v1/object/public/media/banners/banner6.webp",
+      image: "https://via.placeholder.com/300/FFFF00/FFFFFF?text=Banner4",
     },
     // Add more pleasant events with corresponding Wikipedia or reliable sources links
   ];

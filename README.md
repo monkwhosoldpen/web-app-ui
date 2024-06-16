@@ -34,25 +34,28 @@ java -jar bundletool.jar build-apks --bundle=projectx.aab --output=projectx.apks
 
 https://www.geekdashboard.com/extract-apk-files-from-aab/
 
-github personal token: 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
-supabase db password: 7u0QYFMtfrTg8ZAy
-
-
-
-
-
 Welcome
 
-What is goatsconnect as of today
+TODO:
 
-What are future goatsconnect offerings
+1) Offline First Goat's List
+2) Supabase Backend
+3) Angular with PocketBase to sync Supabase
+4) n8n.io Twitter
+5) Live Notifications: OneSignal
+6) ODOP PocketBase Fetch
+7) Sync Twitter Periodically
+8) CasaOS Box Setup
+9) Location Setter - PocketBase
+10) Dashboard with Rich Data and Story with AI Gamified
+11) Quiz & Surveys Gamification Feature Integrated into Platform
+12) Zulip for Team Management / Communication
+13) Twitter Fetch NodeJs
+14) Apify Datasets Fetch
+15) Goat's Twitter Profile Sync
+16) Anonymous and Google Login Supabase
+17) Verification in Group / Across Platform using Mobile Number
+18) Users Focus for now
+19) Chain Reaction to gather Fans -> 1:3
 
-How to use this app to achieve results in 15 days
-Proof of working
-
-Uses of goatsconnect over others (whatsapp,telegram)
-
-Science behind the product
-
-Other
 
