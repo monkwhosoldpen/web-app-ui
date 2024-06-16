@@ -13,7 +13,7 @@ export const manifestoData = {
         },
         {
             "title": "Healthcare Access",
-            "description": "Ensuring quality healthcare for every citizen."
+            "description": "Ensuring quality healthcare for every one."
         }
     ],
     "actionPlan": [
