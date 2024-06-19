@@ -32,7 +32,7 @@ const SuperMenuScreen = withColorScheme(() => {
 
   return (
     <>
-      <View tw="w-full items-center border-gray-200 bg-white dark:border-gray-800 dark:bg-black md:border-l">
+      {/* <View tw="w-full items-center border-gray-200 bg-white dark:border-gray-800 dark:bg-black md:border-l">
         <View tw="min-h-screen w-full">
           <View tw='px-0'>
             {
@@ -43,7 +43,7 @@ const SuperMenuScreen = withColorScheme(() => {
             }
           </View>
         </View>
-      </View>
+      </View> */}
     </>
   );
 });

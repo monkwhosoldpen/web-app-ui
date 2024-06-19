@@ -286,7 +286,8 @@ export const TopCreatorTokenListItem = ({
 
   useEffect(() => {
     if (item) {
-      const image_url = item.img_url.url;
+      const placeholderImage = 'https://via.placeholder.com/150/FF0000/FFFFFF?text=No+Image';
+      const image_url = item?.img_url?.url ? item.img_url.url : placeholderImage;
       setImage_url(image_url);
     }
   }, [item]);
