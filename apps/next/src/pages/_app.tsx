@@ -73,7 +73,7 @@ function App({ Component, pageProps, router }: AppProps) {
       <meta key="title" name="title" content={meta.title} />
       <meta name="description" content={meta.description} />
 
-      <ServiceWorkerScriptTag />
+      {/* <ServiceWorkerScriptTag /> */}
 
       {/* Open graph */}
       <meta property="og:type" content="website" />

@@ -16,44 +16,44 @@ export const AppStateProvider = ({ children }: any) => {
   const [slug, setSlug] = useState<any>(null);
   const [eidEnabled, setEidEnabled] = useState<any>(null);
 
-  const { data: fullData, refetchChannels } = useChannelsList({ pageSize: 20 });
-  const { refetchMyInfo, data: myInfoData } = useMyInfo();
+  // const { data: fullData, refetchChannels } = useChannelsList({ pageSize: 20 });
+  // const { refetchMyInfo, data: myInfoData } = useMyInfo();
 
-  useEffect(() => {
-    // Initialize OneSignal
-    OneSignal.init({
-      appId: oneSignalAppId,
-      safari_web_id: safaraiWebId,
-      allowLocalhostAsSecureOrigin: true,
-      notifyButton: { enable: true }
-    }).then(() => {
-      console.log('OneSignal initialized');
-      Alert.alert('Run', 'initialised oneSignal');
-      // Check if user information is available and then set the external user ID
-      const uid = myInfoData?.data?.profile?.uid;
-      if (uid) {
-        OneSignal.login(uid).then(() => {
-          console.log('External user ID set');
-          Alert.alert('Run', 'Set EID');
-          // Perform any action after setting the external user ID, if necessary
-        }).catch((error) => {
-          console.error('Error setting external user ID:', error);
-        });
-      }
-    }).catch((error) => {
-      console.error('Error initializing OneSignal:', error);
-    });
-  }, [myInfoData?.data?.profile?.uid]); // Dependency array ensures this effect runs when user info changes
+  // useEffect(() => {
+  //   // Initialize OneSignal
+  //   OneSignal.init({
+  //     appId: oneSignalAppId,
+  //     safari_web_id: safaraiWebId,
+  //     allowLocalhostAsSecureOrigin: true,
+  //     notifyButton: { enable: false }
+  //   }).then(() => {
+  //     console.log('OneSignal initialized');
+  //     // Alert.alert('Run', 'initialised oneSignal');
+  //     // Check if user information is available and then set the external user ID
+  //     const uid = myInfoData?.data?.profile?.uid;
+  //     if (uid) {
+  //       OneSignal.login(uid).then(() => {
+  //         console.log('External user ID set');
+  //         Alert.alert('Run', 'Set EID');
+  //         // Perform any action after setting the external user ID, if necessary
+  //       }).catch((error) => {
+  //         console.error('Error setting external user ID:', error);
+  //       });
+  //     }
+  //   }).catch((error) => {
+  //     console.error('Error initializing OneSignal:', error);
+  //   });
+  // }, [myInfoData?.data?.profile?.uid]); // Dependency array ensures this effect runs when user info changes
 
 
-  useEffect(() => {
-    OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
-      console.log("Notification incoming!", event);
-      console.log(fullData);
-      refetchChannels();
-      setSlug(new Date());
-    });
-  }, []);
+  // useEffect(() => {
+  //   OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
+  //     console.log("Notification incoming!", event);
+  //     console.log(fullData);
+  //     refetchChannels();
+  //     setSlug(new Date());
+  //   });
+  // }, []);
 
   // useEffect(() => {
   //   initOneSignal();
