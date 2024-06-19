@@ -27,12 +27,7 @@ export const useNFTDetailByTokenId = (params: UseNFTDetailByTokenIdParams) => {
   const endpoint = useMemo(
     () =>
       params.tokenId && params.contractAddress
-        ? `/v2/token/${params.contractAddress}/${params.tokenId}${
-            params.chainName
-              ? //@ts-ignore
-                `?chain_identifier=${CHAIN_IDENTIFIERS[params.chainName]}`
-              : ""
-          }`
+        ? ``
         : "",
     [params.chainName, params.contractAddress, params.tokenId]
   );

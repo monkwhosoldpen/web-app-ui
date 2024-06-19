@@ -132,7 +132,7 @@ export const TrendingItem = memo<TrendingItemProps>(function TrendingItem({
         <FollowButtonSmall
           size={"small"}
           name={nft.username}
-          profileId={nft.profile_id}
+          username={nft.username}
           onToggleFollow={onToggleFollow}
         />
       </View>

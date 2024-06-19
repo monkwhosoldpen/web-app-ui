@@ -6,6 +6,7 @@ import { useState } from 'react';
 import React, { } from 'react';
 import { OpenedInPWA } from "app/components/openedinpwa";
 import { OpenInBrowser } from "app/components/openinbrowser";
+import { Home } from "app/components/home";
 
 const SuperMenuScreen = withColorScheme(() => {
 
@@ -44,6 +45,7 @@ const SuperMenuScreen = withColorScheme(() => {
           </View>
         </View>
       </View> */}
+      <Home />
     </>
   );
 });
