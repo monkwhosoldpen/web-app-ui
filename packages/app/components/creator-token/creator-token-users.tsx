@@ -264,25 +264,32 @@ export const TopCreatorTokenListItem = ({
   const [bio, setBio] = useState<any>('');
   const [designation, setDesignation] = useState<any>('');
 
+  // useEffect(() => {
+  //   if (item) {
+  //     const nameObj = item?.metadata_with_translations?.name || {};
+  //     const bioObj = item?.metadata_with_translations?.bio || {};
+  //     const name = nameObj[selectedLanguage] || nameObj?.english;
+  //     const bio = bioObj[selectedLanguage] || bioObj?.english;
+
+  //     const location_code = item?.location_code || '';
+  //     const designation = item?.type && item.type.length > 0 ? item.type[0] : '';
+  //     const translatedDesignation = t(`netaType.${designation}`);
+  //     setDesignation(translatedDesignation);
+  //     setLocation(location_code);
+  //     setName(name);
+  //     setBio(bio);
+  //   }
+  // }, [selectedLanguage, item]);
+
+  // const image_url = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
+  const [image_url, setImage_url] = useState<any>('');
+
   useEffect(() => {
     if (item) {
-      const nameObj = item?.metadata_with_translations?.name || {};
-      const bioObj = item?.metadata_with_translations?.bio || {};
-      const name = nameObj[selectedLanguage] || nameObj?.english;
-      const bio = bioObj[selectedLanguage] || bioObj?.english;
-
-      const location_code = item?.location_code || '';
-      const designation = item?.type && item.type.length > 0 ? item.type[0] : '';
-      const translatedDesignation = t(`netaType.${designation}`);
-      setDesignation(translatedDesignation);
-      setLocation(location_code);
-      setName(name);
-      setBio(bio);
+      const image_url = item.img_url.url;
+      setImage_url(image_url);
     }
-  }, [selectedLanguage, item]);
-
-  const image_url = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
-
+  }, [item]);
   return (
     <PressableHover
       tw={["py-2.5 mx-2", tw].join(" ")}
@@ -324,14 +331,14 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {name}
+                {item?.username || 'NA'}
               </Text>
 
               <View tw="h-1" />
 
               {Boolean(item?.verified) && (
                 <View tw="ml-1">
-                  <VerificationBadge size={14} bgColor={item?.is_premium ? "green" : isDark ? "white" : "black"} />
+                  <VerificationBadge size={14} bgColor={isDark ? "white" : "black"} />
                 </View>
               )}
 
@@ -341,7 +348,7 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {designation},  {location}
+                {item?.username || 'NA'}
               </Text>
             </View>
           </View>
@@ -352,7 +359,7 @@ export const TopCreatorTokenListItem = ({
               tw={["",]}
               style={{ backgroundColor: "#08F6CC", height: 26 }}
               name={item?.username}
-              profileId={item?.profile_id}
+              username={item?.username}
               onToggleFollow={onToggleFollow}
             />
           </View>

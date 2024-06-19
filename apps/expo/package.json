@@ -69,6 +69,7 @@
     "@showtime-xyz/date-picker": "^0.2.1",
     "@stripe/react-stripe-js": "2.3.2",
     "@stripe/stripe-js": "^1.54.2",
+    "@supabase/supabase-js": "*",
     "@tradle/react-native-http": "*",
     "@types/three": "^0.146.0",
     "@types/tinycolor2": "^1.4.6",

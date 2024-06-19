@@ -6,7 +6,6 @@ import { PressableScale } from "@showtime-xyz/universal.pressable-scale";
 import { useRouter } from "@showtime-xyz/universal.router";
 import { View } from "@showtime-xyz/universal.view";
 
-import { ShowtimeBrandLogo } from "../showtime-brand";
 import { Text } from "@showtime-xyz/universal.text";
 
 type HeaderLeftProps = {

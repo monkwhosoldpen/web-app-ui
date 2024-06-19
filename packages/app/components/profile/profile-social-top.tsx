@@ -10,7 +10,7 @@ import { colors } from "@showtime-xyz/universal.tailwind";
 import { View } from "@showtime-xyz/universal.view";
 
 
-export const ProfileSocialTop = memo(({ profile }) => {
+export const ProfileSocialTop = memo(({ profile }: any) => {
   const isDark = useIsDarkMode();
   const twitter = profile?.twitter_username;
   const onPressLink = useCallback(async (link: string) => {

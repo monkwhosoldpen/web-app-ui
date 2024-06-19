@@ -208,8 +208,8 @@ export const ProfileTop = ({
   useEffect(() => {
 
     if (item) {
-      const image_url = profileData.profile.img_url[0];
-      const coverUrl = profileData.profile.cover_url[0];
+      const image_url = profileData.profile.img_url.url;
+      const coverUrl = profileData.profile.cover_url.url;
       setImg_url(image_url);
       setCover_url(coverUrl);
     }
@@ -375,7 +375,7 @@ export const ProfileTop = ({
                   <FollowButton
                     size={width < 768 ? "small" : "regular"}
                     name={username}
-                    profileId={profileId}
+                    username={username}
                     onToggleFollow={onToggleFollow}
                   />
                   <View tw="w-2" />

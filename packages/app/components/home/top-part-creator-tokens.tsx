@@ -20,13 +20,13 @@ export const TopPartCreatorTokens = () => {
   const router = useRouter();
 
   const { data: fullData, isLoading } = useTopParties(100);
-  const data = fullData ? fullData.slice(0, 10) : [];
+  const data: any = fullData ? fullData.slice(0, 10) : [];
 
   return (
     <View tw="px-4 md:pl-2 md:pr-4 lg:px-0">
       <View tw="flex-row items-center justify-between py-4">
         <Text tw="text-13 font-semibold text-gray-900 dark:text-white">
-          Top Parties
+          Top Goats
         </Text>
         <Text
           onPress={() => {

@@ -147,7 +147,7 @@ export const useUserProfile = ({ address }: { address?: string | null }) => {
   const userProfile: typeof data = useMemo(() => {
     if (
       data?.data &&
-      myInfoData?.data?.profile.profile_id === data?.data?.profile.profile_id
+      myInfoData?.data?.profile.username === data?.data?.profile.username
     ) {
       return {
         data: {
@@ -215,7 +215,7 @@ export const useProfileNFTs = (params: UserProfileNFTs) => {
 
   const profileUrlFn = useCallback(
     (index: number) => {
-      const url = `${PROFILE_NFTS_QUERY_KEY}?profile_id=${profileId}&page=${index + 1
+      const url = `${PROFILE_NFTS_QUERY_KEY}?username=${profileId}&page=${index + 1
         }&limit=${PAGE_SIZE}&tab_type=${tabType}&sort_type=${sortType}&collection_id=${collectionId}`;
       return url;
     },
@@ -269,7 +269,7 @@ export const useProfileNFTs = (params: UserProfileNFTs) => {
 };
 export const useProfileHideNFTs = (profileId?: number) => {
   const PAGE_SIZE = 100;
-  const url = `${PROFILE_NFTS_QUERY_KEY}?profile_id=${profileId}&page=1&limit=${PAGE_SIZE}&tab_type=hidden`;
+  const url = `${PROFILE_NFTS_QUERY_KEY}?username=${profileId}&page=1&limit=${PAGE_SIZE}&tab_type=hidden`;
 
   const queryState = useSWR<UseProfileNFTs>(url, fetcher);
 
@@ -299,7 +299,7 @@ export type ProfileTabsAPI = {
 
 export const useProfileNftTabs = ({ profileId }: { profileId?: number }) => {
   // const { data, error, isLoading } = useSWR<ProfileTabsAPI>(
-  //   profileId ? "/v2/profile-tabs/tabs?profile_id=" + profileId : null,
+  //   profileId ? "/v2/profile-tabs/tabs?username=" + profileId : null,
   //   fetcher
   // );
   // const songsCount = useMemo(() => {
@@ -387,15 +387,15 @@ export const useMyInfo = () => {
   );
 
   const follow = useCallback(
-    async (profileId: number | undefined) => {
+    async (username: any | undefined) => {
       await loginPromise();
 
-      if (data && profileId) {
+      if (data && username) {
         mutate(
           {
             data: {
               ...data.data,
-              follows: [...data.data.follows, { profile_id: profileId }],
+              follows: [...data.data.follows, username],
             },
           },
           false
@@ -404,7 +404,7 @@ export const useMyInfo = () => {
 
       try {
         await axios({
-          url: `/v2/follow/${profileId}`,
+          url: `/v2/follow/${username}`,
           method: "POST",
           data: {},
         });
@@ -419,7 +419,7 @@ export const useMyInfo = () => {
   );
 
   const join = useCallback(
-    async (channelId: number | undefined) => {
+    async (channelId: any | undefined) => {
       await loginPromise();
 
       if (data && channelId) {
@@ -451,44 +451,15 @@ export const useMyInfo = () => {
     [data, mutate, loginPromise]
   );
 
-
-  const mutateLastCollectedStarDropCache = useCallback(
-    async (params: {
-      contractAddress: string;
-      username: string;
-      slug: string;
-    }) => {
-      if (data) {
-        await mutate(
-          {
-            data: {
-              ...data.data,
-              profile: {
-                ...data.data.profile,
-                latest_star_drop_collected: {
-                  contract_address: params.contractAddress,
-                  username: params.username,
-                  slug: params.slug,
-                },
-              },
-            },
-          },
-          { revalidate: false }
-        );
-      }
-    },
-    [data, mutate]
-  );
-
   const unfollow = useCallback(
-    async (profileId?: number) => {
+    async (username?: any) => {
       if (data) {
         mutate(
           {
             data: {
               ...data.data,
               follows: data.data.follows.filter(
-                (follow) => follow.profile_id !== profileId
+                (follow) => follow !== username
               ),
             },
           },
@@ -497,7 +468,7 @@ export const useMyInfo = () => {
 
         try {
           await axios({
-            url: `/v2/unfollow/${profileId}`,
+            url: `/v2/unfollow/${username}`,
             method: "POST",
             data: {},
           });
@@ -513,7 +484,7 @@ export const useMyInfo = () => {
   );
 
   const unjoin = useCallback(
-    async (channelId?: number) => {
+    async (channelId?: any) => {
 
       if (data) {
         mutate(
@@ -546,9 +517,9 @@ export const useMyInfo = () => {
   );
 
   const isFollowing = useCallback(
-    (userId: number) => {
+    (username: string) => {
       return Boolean(
-        data?.data?.follows?.find((follow) => follow.profile_id === userId)
+        data?.data?.follows?.find((follow) => follow === username)
       );
     },
     [data]
@@ -655,7 +626,6 @@ export const useMyInfo = () => {
     unlike,
     isLiked,
     refetchMyInfo,
-    mutateLastCollectedStarDropCache,
     mutate,
   };
 };

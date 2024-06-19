@@ -291,7 +291,7 @@ export type IEdition = {
 export type MyInfo = {
   all_Channels: never[];
   data: {
-    follows: Array<{ profile_id: number }>;
+    follows: Array<any>;
     channels: Array<number>;
     profile: Profile & {
       has_spotify_token: boolean;

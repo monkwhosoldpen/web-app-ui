@@ -130,7 +130,7 @@ export const useChannelsList = (params: any) => {
   const PAGE_SIZE = 15;
   const pageSize = params?.pageSize || PAGE_SIZE;
   const index = params?.index || 0;
-  let location = params?.location || myInfoData?.data.profile.location_code || '' || 'INDIA';
+  let location = 'INDIA';
   const limit = 20;
 
   const fetchUrl = useCallback(

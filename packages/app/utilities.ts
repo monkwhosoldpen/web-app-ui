@@ -707,12 +707,13 @@ export const OAUTH_REDIRECT_URI = Platform.select({
 });
 
 export const isProfileIncomplete = (profile?: Profile) => {
+  const captcha_completed_at = profile?.user_metadata?.captcha_completed_at;
   // FYI: has_social_login is true if user has logged in with google, apple, spotify, twitter, instagram
   // the value is false if user has logged in with email or phone number
   const isIncomplete = profile
     ?
     // !profile?.location_code ||
-    (!profile.captcha_completed_at)
+    (!captcha_completed_at)
     : undefined;
   return isIncomplete;
 };

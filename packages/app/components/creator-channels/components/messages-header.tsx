@@ -29,6 +29,7 @@ import {
 import { MenuItemIcon } from "app/components/dropdown/menu-item-icon";
 import { Analytics, EVENTS } from "app/lib/analytics";
 import type { Profile } from "app/types";
+import { useEffect, useState } from 'react';
 
 import {
   DropdownMenuContent,
@@ -38,15 +39,18 @@ import {
   DropdownMenuTrigger,
 } from "design-system/dropdown-menu";
 import { View as LeanView } from "@showtime-xyz/universal.view";
-// import { LeanView } from "./lean-text";
-
 
 export const MessagesHeader = (props: HeaderProps) => {
   const router = useRouter();
   const isDark = useIsDarkMode();
-  // const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const imgUrl = props?.picture;
-  const image_url = imgUrl && imgUrl.length > 0 ? imgUrl[0] : null;
+  const [image_url, setImage_url] = useState<any>('');
+
+  useEffect(() => {
+    if (props.picture) {
+      const image_url = props.picture.url;
+      setImage_url(image_url);
+    }
+  }, [props]);
 
   return (
     <LeanView
@@ -83,7 +87,7 @@ export const MessagesHeader = (props: HeaderProps) => {
               onPress={() => router.push(`/@${props.username}`)}
               tw="text-sm font-bold text-gray-900 dark:text-gray-100"
             >
-              {props.title ?? "Loading..."}
+              {props.username ?? "Loading..."}
             </Text>
           </LeanView>
           <LeanView tw="flex-row items-center justify-center">

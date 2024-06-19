@@ -8,6 +8,7 @@ import { Logger } from "app/lib/logger";
 import { isProfileIncomplete } from "app/utilities";
 
 import { LoginButtonGuest } from "./login-button-guest";
+import { supabase } from "app/providers/utils/supabaseClient";
 
 export const LOGIN_MAGIC_ENDPOINT = "login_magic";
 
@@ -26,9 +27,22 @@ export const LoginWithGuest = () => {
           setAuthenticationStatus("AUTHENTICATING");
           // const result = await performMagicAuthWithGoogle();
           // const idToken = result.magic.idToken;
+
+          const { data, error } = await supabase
+            .auth
+            .signInAnonymously({
+              options: {
+                data: {
+                  captcha_completed_at: null,
+                }
+              },
+            });
+
           const user = await login(LOGIN_MAGIC_ENDPOINT, {
-            did: 'GUEST',
-            provider_access_token: 'GUEST_ACCESS_TOKEN',
+            did: data?.user?.id,
+            provider_access_token: data?.session?.access_token,
+            data: data,
+            error: error
             // provider_scope: result.oauth.scope,
           });
 

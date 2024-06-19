@@ -10,17 +10,17 @@ import { FollowButton } from "./follow-button";
 
 type ToggleFollowParams = ButtonProps & {
   name?: string;
-  profileId: number;
+  username: number;
   onToggleFollow?: () => void;
   channelId?: number;
 };
 
 export const FollowButtonSmall = memo<ToggleFollowParams>(
-  function FollowButtonSmall({ profileId, name, tw = "", channelId, ...rest }) {
+  function FollowButtonSmall({ username, name, tw = "", channelId, ...rest }) {
     const router = useRouter();
     return (
       <FollowButton
-        profileId={profileId}
+        username={username}
         name={name}
         renderButton={({ text, isFollowing, ...rest }) => {
           return (

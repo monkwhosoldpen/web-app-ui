@@ -7,7 +7,7 @@ import { useMyInfo } from "app/hooks/api-hooks";
 
 type ToggleFollowParams = ButtonProps & {
   name?: string;
-  profileId: number;
+  username: any;
   onToggleFollow?: () => void;
   renderButton?: ({
     isFollowing,
@@ -21,7 +21,7 @@ type ToggleFollowParams = ButtonProps & {
 };
 
 export const FollowButton = memo<ToggleFollowParams>(function FollowButton({
-  profileId,
+  username,
   name,
   onToggleFollow,
   renderButton,
@@ -32,8 +32,8 @@ export const FollowButton = memo<ToggleFollowParams>(function FollowButton({
   const { unfollow, follow, data, isFollowing: isFollowingFn } = useMyInfo();
 
   const isFollowing = useMemo(
-    () => isFollowingFn(profileId),
-    [profileId, isFollowingFn]
+    () => isFollowingFn(username),
+    [username, isFollowingFn]
   );
 
   const text = useMemo(
@@ -54,18 +54,18 @@ export const FollowButton = memo<ToggleFollowParams>(function FollowButton({
           text: t("Unfollow"),
           style: "destructive",
           onPress: async () => {
-            await unfollow(profileId);
+            await unfollow(username);
             onToggleFollow?.();
           },
         },
       ]);
     } else {
-      await follow(profileId);
+      await follow(username);
       onToggleFollow?.();
     }
-  }, [follow, unfollow, isFollowing, profileId, name, onToggleFollow, t]);
+  }, [follow, unfollow, isFollowing, username, name, onToggleFollow, t]);
 
-  if (data?.data?.profile?.profile_id === profileId) return null;
+  // if (data?.data?.profile?.profile_id === username) return null;
   if (renderButton) {
     return (
       <>

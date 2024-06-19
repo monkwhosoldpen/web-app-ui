@@ -114,16 +114,22 @@ export const MessageItem = memo(
     const isFromZulip = channel_message?.source == 'ZULIP';
 
     const imgUrl = item.channel_message?.sent_by?.profile?.img_url;
-    const image_url = imgUrl && imgUrl.length > 0 ? imgUrl[0] : null;
+
+    const [image_url, setImage_url] = useState<any>('');
+
+    useEffect(() => {
+      if (imgUrl) {
+        const image_url = imgUrl;
+        setImage_url(image_url);
+      }
+    }, [item]);
 
     const [messageContent, setMessageContent] = useState<any>('');
 
     useEffect(() => {
       const translatedContent = item.translated_content || {};
       const selectedLanguageContent = translatedContent[selectedLanguage] || translatedContent['default'];
-
-      let content = selectedLanguageContent || item?.content;
-
+      let content = item.channel_message.body || 'NA';
       const ret = content
         ? linkifyDescription(
           limitLineBreaks(
@@ -133,7 +139,6 @@ export const MessageItem = memo(
           "!text-indigo-600 dark:!text-blue-400"
         )
         : "";
-
       setMessageContent(ret);
     }, [selectedLanguage, item]);
 
@@ -161,7 +166,7 @@ export const MessageItem = memo(
                   <LeanText
                     tw={"text-sm font-bold text-gray-900 dark:text-gray-100"}
                   >
-                    {item?.username}
+                    {item.channel_message?.sent_by?.profile?.username}
                   </LeanText>
                 </Link>
 

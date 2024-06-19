@@ -281,7 +281,7 @@ const CreatorChannelsListItem = memo(
                   ]}
                   numberOfLines={1}
                 >
-                  {name}
+                  {item?.username}
                 </Text>
 
                 <LeanText tw="ml-2 text-xs text-gray-500">
