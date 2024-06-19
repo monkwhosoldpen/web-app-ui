@@ -53,18 +53,16 @@ export const ShareDetailed = () => {
 
   useEffect(() => {
     if (item) {
-      const image_url = item.img_url[0];
-      const coverUrl = item.cover_url[0];
-      let newBanners = item?.cover_url?.map((ele: any) => {
-        return {
-          type: "profile",
-          username: "JohnDoe",
-          slug: "",
-          link: "https://example.com",
-          image: ele,
-        };
-      });
-      setBanners(newBanners);
+      // let newBanners = item?.cover_url?.map((ele: any) => {
+      //   return {
+      //     type: "profile",
+      //     username: "JohnDoe",
+      //     slug: "",
+      //     link: "https://example.com",
+      //     image: ele,
+      //   };
+      // });
+      // setBanners(newBanners);
     }
   }, [item]);
 
