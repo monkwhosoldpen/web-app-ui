@@ -84,7 +84,7 @@ export const ChannelsList = memo(
             data.length ? (
               <View tw="flex-row flex-wrap">
                 <View tw="flex-1">
-                  {data?.map((item, index) => {
+                  {data?.map((item: any, index: any) => {
                     return (
                       <View key={index}>
                         <CreatorChannelsListItem item={item} />
@@ -249,6 +249,7 @@ const CreatorChannelsListItem = memo(
     // const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
     // const uploadedImageUrl = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
     // const image_url = `${supabaseURL}/storage/v1/object/public/${uploadedImageUrl}`;
+    debugger;
     return (
       <PlatformPressable
         onPress={() => {
@@ -265,7 +266,7 @@ const CreatorChannelsListItem = memo(
         <View tw="flex-1 px-4 md:px-4 py-2.5">
           <View tw="flex-row items-center">
             <Avatar
-              url={image_url}
+              url={item?.img_url?.url}
               size={52}
               alt="CreatorPreview Avatar"
               tw={"pointer-events-none mr-3"}
@@ -325,6 +326,7 @@ export const CreatorChannelsListCreator = memo(
     const { mutate } = useSWRConfig();
     const matchMutate = useMatchMutate();
     const { i18n, t } = useTranslation();
+    debugger;
     return (
       <View tw="flex-1 px-4 md:px-4 py-3">
         <View tw="flex-row items-start">

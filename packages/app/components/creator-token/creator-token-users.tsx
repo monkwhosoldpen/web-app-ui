@@ -332,7 +332,7 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {item?.username || 'NA'}
+                {item?.full_name || item?.username || 'NA'}
               </Text>
 
               <View tw="h-1" />
@@ -349,7 +349,7 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {item?.username || 'NA'}
+                {item?.description || 'NA'}
               </Text>
             </View>
           </View>

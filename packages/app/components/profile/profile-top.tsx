@@ -139,6 +139,8 @@ export const ProfileTop = ({
 
   // const name = profileData?.profile['name' + '_' + selectedLanguage];
   const username = profileData?.profile.username;
+  const description = profileData?.profile.description;
+  const full_name = profileData?.profile.full_name;
   // const bio: any = profileData?.profile['bio' + '_' + selectedLanguage];
   const { isIncompletedProfile } = useUser();
   const { width, height: screenHeight } = useWindowDimensions();
@@ -403,10 +405,10 @@ export const ProfileTop = ({
                 </Text>
                 <View tw="h-2 md:h-3" />
                 <View tw="flex-row items-center">
-                  {Boolean(username) && (
+                  {Boolean(full_name) && (
                     <>
                       <Text tw="text-base text-gray-600 dark:text-gray-400 md:text-lg">
-                        {`@${username}`}
+                        {`${full_name}`}
                       </Text>
                     </>
                   )}
@@ -419,10 +421,11 @@ export const ProfileTop = ({
                 </View>
                 <View tw="h-2 md:h-3" />
                 <View tw="flex-row items-center">
-                  {Boolean(username) && (
+                  {Boolean(description) && (
                     <>
                       <Text tw="text-base text-gray-600 dark:text-gray-400 md:text-lg">
-                        {designation},  {location}
+                        {/* {designation},  {location} */}
+                        {description}
                       </Text>
                     </>
                   )}
