@@ -210,8 +210,8 @@ export const ProfileTop = ({
   useEffect(() => {
 
     if (item) {
-      const image_url = profileData.profile.img_url.url;
-      const coverUrl = profileData.profile.cover_url.url;
+      const image_url = profileData.profile.img_url;
+      const coverUrl = profileData.profile.cover_url;
       setImg_url(image_url);
       setCover_url(coverUrl);
     }

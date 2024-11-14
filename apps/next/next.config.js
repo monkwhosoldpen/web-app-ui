@@ -150,7 +150,7 @@ const nextConfig = {
       "media-stage.showtime.xyz",
       "cydjretpcgmuezpkbkql.supabase.co",
       "via.placeholder.com",
-      "placehold.co"
+      "placeholder.com"
     ],
   },
   async headers() {

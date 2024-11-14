@@ -13,7 +13,7 @@ const SettingsHeaderContext = createContext<{
     setFilter: () => { },
 });
 
-const INITIAL_FILTER = "notifications";
+const INITIAL_FILTER = "advanced";
 
 type Query = {
     tab: "creator" | "drop";
@@ -56,13 +56,14 @@ const Settingsmall = () => {
         //     index: 0,
         // },
         {
-            title: t('settingsPage.Notifications'),
-            key: "notifications",
+            title: t('settingsPage.Advanced'),
+            key: "advanced",
             index: 0,
         },
         {
-            title: t('settingsPage.Advanced'),
-            key: "advanced",
+
+            title: t('settingsPage.Notifications'),
+            key: "notifications",
             index: 1,
         },
     ];

@@ -264,22 +264,31 @@ export const TopCreatorTokenListItem = ({
   const [bio, setBio] = useState<any>('');
   const [designation, setDesignation] = useState<any>('');
 
-  // useEffect(() => {
-  //   if (item) {
-  //     const nameObj = item?.metadata_with_translations?.name || {};
-  //     const bioObj = item?.metadata_with_translations?.bio || {};
-  //     const name = nameObj[selectedLanguage] || nameObj?.english;
-  //     const bio = bioObj[selectedLanguage] || bioObj?.english;
+  useEffect(() => {
+    if (item) {
+      // Directly accessing the name and bio fields from metadata_with_translations
+      const nameObj = item?.metadata_with_translations?.name || {};
+      const bioObj = item?.metadata_with_translations?.bio || {};
 
-  //     const location_code = item?.location_code || '';
-  //     const designation = item?.type && item.type.length > 0 ? item.type[0] : '';
-  //     const translatedDesignation = t(`netaType.${designation}`);
-  //     setDesignation(translatedDesignation);
-  //     setLocation(location_code);
-  //     setName(name);
-  //     setBio(bio);
-  //   }
-  // }, [selectedLanguage, item]);
+      // Access the name and bio in the selected language or fall back to English
+      const name = nameObj[selectedLanguage] || nameObj?.english;
+      const bio = bioObj[selectedLanguage] || bioObj?.english;
+
+      // Safely retrieve the location and designation
+      const location_code = item?.location_code || '';
+      const designation = item?.type && item.type.length > 0 ? item.type[0] : '';
+
+      // Translate designation if available
+      const translatedDesignation = t(`netaType.${designation}`);
+
+      // Update state with the translated or fallback values
+      setDesignation(translatedDesignation);
+      setLocation(location_code);
+      setName(name);
+      setBio(bio);
+    }
+  }, [selectedLanguage, item]);
+
 
   // const image_url = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
   const [image_url, setImage_url] = useState<any>('');
@@ -291,6 +300,7 @@ export const TopCreatorTokenListItem = ({
       setImage_url(image_url);
     }
   }, [item]);
+
   return (
     <PressableHover
       tw={["py-2.5 mx-2", tw].join(" ")}
@@ -322,7 +332,7 @@ export const TopCreatorTokenListItem = ({
 
           <View tw="w-2.5" />
           <View tw="md:w-10" />
-          <Avatar url={image_url} size={35} />
+          <Avatar url={item?.img_url} size={35} />
           <View tw="md:w-10" />
 
           <View tw="ml-2 w-[200px] md:w-[300px]">
@@ -332,7 +342,7 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {item?.full_name || item?.username || 'NA'}
+                {name || item?.username || 'NA'}
               </Text>
 
               <View tw="h-1" />
@@ -349,7 +359,7 @@ export const TopCreatorTokenListItem = ({
                 numberOfLines={1}
                 style={{ lineHeight: 20 }}
               >
-                {item?.description || 'NA'}
+                {bio || 'NA'}
               </Text>
             </View>
           </View>
