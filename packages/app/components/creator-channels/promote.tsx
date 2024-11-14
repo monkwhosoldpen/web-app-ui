@@ -101,9 +101,9 @@ export const ChannelsPromote = () => {
       const name = nameObj[selectedLanguage] || nameObj?.english;
       const bio = bioObj[selectedLanguage] || bioObj?.english;
 
-      const location_code = item?.location_code || '';
+      const location_code = item?.location_code || 'World';
       const designation = item?.type && item.type.length > 0 ? item.type[0] : '';
-      const translatedDesignation = t(`netaType.${designation}`);
+      const translatedDesignation = 'G.O.A.T.';//t(`netaType.${designation}`);
       setDesignation(translatedDesignation);
       setLocation(location_code);
       setName(name);
@@ -114,8 +114,8 @@ export const ChannelsPromote = () => {
   useEffect(() => {
 
     if (item) {
-      const image_url = item.img_url[0];
-      const coverUrl = item.cover_url[0];
+      const image_url = item.img_url;
+      const coverUrl = item.cover_url;
       setImg_url(image_url);
       setCover_url(coverUrl);
     }
@@ -211,7 +211,7 @@ export const ChannelsPromote = () => {
 
   useEffect(() => {
     if (profile) {
-      const image_url = profile.img_url[0];
+      const image_url = profile.img_url;
       // setImg_url(image_url);
       setImg_url(image_url);
     }
@@ -255,7 +255,7 @@ export const ChannelsPromote = () => {
                           </Text>
                           <View tw="mt-0 flex-row">
                             <Text tw="mt-2 text-md font-bold text-gray-800 dark:text-gray-200">
-                              {designation},  {location}
+                              {designation}  {location}
                             </Text>
                           </View>
                         </View>
