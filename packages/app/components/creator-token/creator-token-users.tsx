@@ -82,7 +82,7 @@ export const TopCreatorTokenItemOnProfile = ({
   const { t, i18n } = useTranslation();
 
   const selectedLanguage = i18n.language;
-  const image_url = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
+  const image_url = item.img_url;
 
   const [name, setName] = useState<any>('');
   const [location, setLocation] = useState<any>('');
