@@ -465,7 +465,7 @@ const TrendingHeaderContext = createContext<{
 
 const { useParam } = createParam<Query>();
 
-const INITIAL_FILTER = "all";
+const INITIAL_FILTER = "TOP";
 
 export const Trending = ({ data }: any) => {
 

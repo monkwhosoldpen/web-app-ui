@@ -21,28 +21,52 @@ import { CreatorTokensPanel } from "../profile/creator-tokens-panel";
 import { MyCollection } from "../profile/my-collection";
 import { TopPartCreatorTokens } from "../home/top-part-creator-tokens";
 
-export const HomeV2 = () => {
+// First, let's define an interface for the language/category item
+interface Category {
+  locale: string;
+  name: string;
+}
 
-  const { data: fullData, isLoading } = useTopCreatorToken(100);
-  const data = fullData?.creator_tokens ? fullData?.creator_tokens : [];
+// Add these type definitions at the top of the file
+interface CreatorToken {
+  id: string;
+  // ... other properties
+}
+
+
+export const HomeV2 = () => {
+  const [selectedCategory, setSelectedCategory] = useState('TOP');
+
+  const { data: fullData, isLoading, refetchTop } = useTopCreatorToken(100, selectedCategory);
+  const data = fullData?.creator_tokens ?? [];
 
   const { width } = useScrollbarSize();
   const contentWidth = useContentWidth();
   const isMdWidth = contentWidth + width > breakpoints["md"];
   const isProfileMdScreen = contentWidth > DESKTOP_PROFILE_WIDTH - 10;
 
-  const availableStates = [
-    { locale: 'ALL', name: 'All' },
-    { locale: 'MH', name: 'Maharashtra' },
-    { locale: 'GJ', name: 'Gujarat' },
-    { locale: 'TG', name: 'Telangana' },
-    { locale: 'AP', name: 'Andhra Pradesh' },
-    { locale: 'TN', name: 'Tamil Nadu' },
-    { locale: 'KL', name: 'Kerala' },
-    { locale: 'KA', name: 'Karnataka' },
-    { locale: 'UP', name: 'Uttar Pradesh' },
-    { locale: 'DL', name: 'Delhi' },
-    { locale: 'WB', name: 'West Bengal' },
+  const availableCategories = [
+    { locale: 'TOP', name: 'Top' },
+    { locale: 'FB', name: 'Football' },
+    { locale: 'CR', name: 'Cricket' },
+    { locale: 'BSK', name: 'Basketball' },
+    { locale: 'ES', name: 'Esports' },
+    { locale: 'CY', name: 'Cycling' },
+    { locale: 'TR', name: 'Tennis' },
+    { locale: 'AT', name: 'Athletics' },
+    { locale: 'SW', name: 'Swimming' },
+    { locale: 'BB', name: 'Baseball' },
+    { locale: 'VB', name: 'Volleyball' },
+    { locale: 'WF', name: 'Winter Sports' },
+    { locale: 'MO', name: 'Motorsports' },
+    { locale: 'RG', name: 'Rugby' },
+    { locale: 'BO', name: 'Boxing' },
+    { locale: 'WFH', name: 'Weightlifting' },
+    { locale: 'GY', name: 'Gymnastics' },
+    { locale: 'CH', name: 'Chess' },
+    { locale: 'BD', name: 'Badminton' },
+    { locale: 'HK', name: 'Hockey' },
+    { locale: 'WW', name: 'Wrestling' },
   ];
 
   const { t } = useTranslation();
@@ -55,6 +79,19 @@ export const HomeV2 = () => {
       />
     )
   }, []);
+
+  const [isRefetching, setIsRefetching] = useState(false);
+
+  const handleCategoryChange = useCallback(async (category: string) => {
+    console.log('Category changed to:', category);
+    setSelectedCategory(category);
+    setIsRefetching(true);
+    try {
+      await refetchTop();
+    } finally {
+      setIsRefetching(false);
+    }
+  }, [refetchTop]);
 
   return (
     <>
@@ -70,7 +107,7 @@ export const HomeV2 = () => {
                 <View tw='px-4 mb-2'>
                   <View tw="flex-row items-center justify-between">
                     <View tw="flex-row items-center mt-2">
-                      <FilterDropDown availableLanguages={availableStates} unselected={'All'} />
+                      <FilterDropDown availableLanguages={availableCategories} unselected={'TOP'} onCategoryChange={handleCategoryChange} />
                     </View>
 
                     <View tw="flex-row items-center">
@@ -80,7 +117,7 @@ export const HomeV2 = () => {
 
                 </View>
 
-                {isLoading ? (
+                {(isLoading || isRefetching) ? (
                   <View>
                     {new Array(20).fill(0).map((_, index) => {
                       return (
@@ -94,13 +131,12 @@ export const HomeV2 = () => {
                   </View>
                 ) : null}
 
-                {!isLoading && <>
-
-                  {
-                    data.length ? (
+                {!isLoading && !isRefetching && (
+                  <>
+                    {data.length ? (
                       <View tw="flex-row flex-wrap">
                         <View tw="flex-1">
-                          {data?.map((item, index) => {
+                          {data.map((item: CreatorToken, index: number) => {
                             return (
                               <TopCreatorTokenListItem
                                 item={item}
@@ -117,8 +153,8 @@ export const HomeV2 = () => {
                     ) : (
                       <ListEmptyComponent />
                     )}
-                </>
-                }
+                  </>
+                )}
 
               </View>
 
@@ -160,22 +196,24 @@ import {
 
 import { HeaderSearch } from "../header/header-search";
 
-const FilterDropDown = ({ availableLanguages, unselected }: any) => {
+const FilterDropDown = ({
+  availableLanguages,
+  unselected,
+  onCategoryChange
+}: {
+  availableLanguages: Category[];
+  unselected: string;
+  onCategoryChange: (category: string) => void;
+}) => {
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('TOP');
 
-  const { i18n } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState('english');
-
-  const handleLanguageOptionSelected = async (language: any) => {
+  const handleLanguageOptionSelected = async (language: string) => {
     setSelectedLanguage(language);
+    onCategoryChange(language);
   };
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <View tw="ml-2">
-
       <DropdownMenuRoot>
         <DropdownMenuTrigger>
           <Button variant="primary" tw={[
@@ -189,19 +227,25 @@ const FilterDropDown = ({ availableLanguages, unselected }: any) => {
             </>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent loop sideOffset={8}>
-          {availableLanguages.map((lang, i) => (
-            <React.Fragment key={i}>
-              <DropdownMenuItem key={lang?.locale}
-                onSelect={() => handleLanguageOptionSelected(lang?.locale)}
-              >
-                <MenuItemIcon Icon={Edit} ios={{ name: "highlighter" }} />
-                <DropdownMenuItemTitle tw="text-gray-700 dark:text-neutral-300">
-                  {lang?.name}
-                </DropdownMenuItemTitle>
-              </DropdownMenuItem>
-            </React.Fragment>
-          ))}
+        <DropdownMenuContent
+          loop
+          sideOffset={8}
+          tw='max-h-[300px] overflow-y-scroll'
+        >
+          <View >
+            {availableLanguages.map((lang, i) => (
+              <React.Fragment key={i}>
+                <DropdownMenuItem key={lang?.locale}
+                  onSelect={() => handleLanguageOptionSelected(lang?.locale)}
+                >
+                  <MenuItemIcon Icon={Edit} ios={{ name: "highlighter" }} />
+                  <DropdownMenuItemTitle tw="text-gray-700 dark:text-neutral-300">
+                    {lang?.name}
+                  </DropdownMenuItemTitle>
+                </DropdownMenuItem>
+              </React.Fragment>
+            ))}
+          </View>
         </DropdownMenuContent>
       </DropdownMenuRoot>
     </View>

@@ -69,19 +69,34 @@ export const useCreatorTokenCollectors = (
 };
 
 export const useTopCreatorToken = (
-  limit: number = 20
+  limit: number = 20,
+  category?: string
 ) => {
-  const { data, isLoading, mutate, error } = useSWR<CreatorTokenCollectors>(
-    `/v1/creator-token/top?limit=${limit}`,
-    fetcher,
+  const { data, isLoading, mutate, error, isValidating } = useSWR<CreatorTokenCollectors>(
+    `/v1/creator-token/top?limit=${limit}${category ? `&category=${category}` : ''}`,
+    async (url: string) => {
+      console.log('Selected Category:', category);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return fetcher(url);
+    },
     { revalidateOnFocus: false }
   );
+
+  const refetchTop = useCallback(async () => {
+    console.log('Refetching with category:', category);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return mutate();
+  }, [mutate, category]);
+
+  const isRefetching = !isLoading && isValidating;
 
   return {
     data,
     isLoading,
+    isRefetching,
     mutate,
     error,
+    refetchTop
   };
 };
 

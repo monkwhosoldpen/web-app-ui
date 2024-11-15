@@ -555,7 +555,7 @@ export const Messages = memo(() => {
   const [name, setName] = useState<any>('');
   const [location, setLocation] = useState<any>('');
   const [bio, setBio] = useState<any>('');
-  const [isPremium, setIsPremium] = useState<any>(true);
+  const [isPremium, setIsPremium] = useState<any>(item?.is_premium);
 
   const { onToggleFollow } = useFollow({
     username: item?.username,
