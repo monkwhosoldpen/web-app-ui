@@ -38,8 +38,6 @@ import { Text } from "@showtime-xyz/universal.text";
 import { View } from "@showtime-xyz/universal.view";
 
 import { useUserProfile } from "app/hooks/api-hooks";
-import { useCreatorCollectionDetail } from "app/hooks/use-creator-collection-detail";
-import { useNFTDetailBySlug } from "app/hooks/use-nft-details-by-slug";
 import { usePlatformBottomHeight } from "app/hooks/use-platform-bottom-height";
 import { useRedirectToChannelCongrats } from "app/hooks/use-redirect-to-channel-congrats";
 import { useRedirectToCreatorTokenSocialShare } from "app/hooks/use-redirect-to-creator-token-social-share-screen";
@@ -70,9 +68,9 @@ import { UNREAD_MESSAGES_KEY } from "./hooks/use-channels-unread-messages";
 import { ChannelMessageItem } from "./types";
 import { useTranslation } from "react-i18next";
 import { useFollow } from "app/hooks/use-follow";
-import { FollowButtonSmall } from "../follow-button-small";
 import { AppStateProvider } from "app/providers/app-state-provider";
 import { AppStateContext } from "app/context/app-state-context";
+import { SubGroupsSidebar } from "./components/subgroups-sidebar";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -480,6 +478,56 @@ export const Messages = memo(() => {
     address: channelDetail.data?.owner?.username,
   });
 
+  const [activeSubgroupId, setActiveSubgroupId] = useState("main");
+
+  // Mock subgroups data
+  const mockSubgroups: any = [
+    // Regular case
+    { id: "main", name: "Main", memberCount: 150 },
+    { id: "announcements", name: "Announcements", memberCount: 145 },
+    { id: "general", name: "General Discussion", memberCount: 130 },
+
+    // No members
+    { id: "emptyGroup", name: "Empty Group", memberCount: 0 },
+
+    // Edge case: Very high member count (possible max number)
+    { id: "massiveGroup", name: "Massive Group", memberCount: 10000 },
+
+    // Edge case: Very low member count (single member)
+    { id: "singleMember", name: "Single Member", memberCount: 1 },
+
+    // Irregular/long names (UI should handle truncation or wrapping)
+    { id: "longNameGroup", name: "This is a very long name that might get truncated depending on the UI layout", memberCount: 50 },
+
+    // Special characters in names
+    { id: "specialChars", name: "Group with special characters !@#$%^&*()", memberCount: 25 },
+
+    // Edge case: Names with spaces or inconsistent casing
+    { id: "leadingSpace", name: " Leading Space", memberCount: 100 },
+    { id: "trailingSpace", name: "Trailing Space ", memberCount: 80 },
+    { id: "mixedCaseGroup", name: "MiXeD CaSe GrOuP", memberCount: 90 },
+
+    // Edge case: Name with numbers
+    { id: "numericGroup", name: "Group 123", memberCount: 200 },
+
+    // Empty name edge case
+    { id: "emptyName", name: "", memberCount: 60 },
+
+    // Group with the same name but different IDs
+    { id: "duplicateName1", name: "Duplicate Name", memberCount: 50 },
+    { id: "duplicateName2", name: "Duplicate Name", memberCount: 45 },
+
+    // Edge case: Minimum subgroup name length (empty string or one character)
+    { id: "a", name: "A", memberCount: 30 },
+
+    // Maximum subgroup name length (100 characters)
+    { id: "maxLengthName", name: "A".repeat(100), memberCount: 110 },
+
+    // Null or undefined member count (handles errors or fallback)
+    { id: "nullCount", name: "Null Count", memberCount: null },
+    { id: "undefinedCount", name: "Undefined Count", memberCount: undefined },
+  ];
+
   if (!channelId) {
     return (
       <View tw="animate-fade-in-250 h-full w-full flex-1 items-center justify-center">
@@ -502,12 +550,12 @@ export const Messages = memo(() => {
     );
   }
 
-  const item = channelDetail.data?.owner || {};
+  const item: any = channelDetail.data?.owner || {};
   // const image_url = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
   const [name, setName] = useState<any>('');
   const [location, setLocation] = useState<any>('');
   const [bio, setBio] = useState<any>('');
-  const [isPremium, setIsPremium] = useState<any>(false);
+  const [isPremium, setIsPremium] = useState<any>(true);
 
   const { onToggleFollow } = useFollow({
     username: item?.username,
@@ -586,32 +634,107 @@ export const Messages = memo(() => {
             <MessageSkeleton />
           ) : (
             <>
-              <AnimatedInfiniteScrollListWithRef
-                ref={listRef}
-                keyExtractor={keyExtractor}
-                data={data}
-                onEndReached={onLoadMore}
-                inverted
-                getItemType={getItemType}
-                drawDistance={200}
-                scrollEnabled={data.length > 0}
-                overscan={4}
-                onScroll={scrollhandler}
-                useWindowScroll={false}
-                estimatedItemSize={300}
-                // android > 12 flips the scrollbar to the left, FlashList bug
-                showsVerticalScrollIndicator={Platform.OS !== "android"}
-                keyboardDismissMode={
-                  Platform.OS === "ios" ? "interactive" : "on-drag"
-                }
-                renderItem={renderItem}
-                extraData={extraData}
-                ListHeaderComponent={renderListHeader}
-                CellRendererComponent={CustomCellRenderer}
-                ListEmptyComponent={listEmptyComponent}
-                ListFooterComponent={renderListFooter}
-              />
+              {
+                isPremium && (
+                  <View tw="flex-1 flex-row">
+                    <SubGroupsSidebar
+                      subgroups={mockSubgroups}
+                      onSelectSubgroup={setActiveSubgroupId}
+                      activeSubgroupId={activeSubgroupId}
+                    />
+                    <AnimatedView
+                      tw={[
+                        "flex-1 overflow-hidden",
+                        showCollectToUnlock ? "pb-2" : "",
+                      ]}
+                      style={{ marginLeft: 50 }}
+                    >
+                      {isLoading ||
+                        channelDetail.isLoading ? (
+                        <MessageSkeleton />
+                      ) : (
+                        <>
+                          <>
+                            <AnimatedInfiniteScrollListWithRef
+                              ref={listRef}
+                              keyExtractor={keyExtractor}
+                              data={data}
+                              onEndReached={onLoadMore}
+                              inverted
+                              getItemType={getItemType}
+                              drawDistance={200}
+                              scrollEnabled={data.length > 0}
+                              overscan={4}
+                              onScroll={scrollhandler}
+                              useWindowScroll={false}
+                              estimatedItemSize={300}
+                              // android > 12 flips the scrollbar to the left, FlashList bug
+                              showsVerticalScrollIndicator={Platform.OS !== "android"}
+                              keyboardDismissMode={
+                                Platform.OS === "ios" ? "interactive" : "on-drag"
+                              }
+                              renderItem={renderItem}
+                              extraData={extraData}
+                              ListHeaderComponent={renderListHeader}
+                              CellRendererComponent={CustomCellRenderer}
+                              ListEmptyComponent={listEmptyComponent}
+                              ListFooterComponent={renderListFooter}
+                            />
+                          </>
+                        </>
+                      )}
+                    </AnimatedView>
+                  </View>
+                )
+              }
+
+              {
+                !isPremium && (
+                  <AnimatedView
+                    tw={[
+                      "flex-1 overflow-hidden",
+                      //isUserAdmin ? "android:pb-12 ios:pb-8 web:pb-12" : "",
+                      showCollectToUnlock ? "pb-2" : "", // since we always show the input, leave the padding
+                    ]}
+                  >
+                    {isLoading ||
+                      channelDetail.isLoading ? (
+                      <MessageSkeleton />
+                    ) : (
+                      <>
+                        <AnimatedInfiniteScrollListWithRef
+                          ref={listRef}
+                          keyExtractor={keyExtractor}
+                          data={data}
+                          onEndReached={onLoadMore}
+                          inverted
+                          getItemType={getItemType}
+                          drawDistance={200}
+                          scrollEnabled={data.length > 0}
+                          overscan={4}
+                          onScroll={scrollhandler}
+                          useWindowScroll={false}
+                          estimatedItemSize={300}
+                          // android > 12 flips the scrollbar to the left, FlashList bug
+                          showsVerticalScrollIndicator={Platform.OS !== "android"}
+                          keyboardDismissMode={
+                            Platform.OS === "ios" ? "interactive" : "on-drag"
+                          }
+                          renderItem={renderItem}
+                          extraData={extraData}
+                          ListHeaderComponent={renderListHeader}
+                          CellRendererComponent={CustomCellRenderer}
+                          ListEmptyComponent={listEmptyComponent}
+                          ListFooterComponent={renderListFooter}
+                        />
+                      </>
+                    )}
+                  </AnimatedView>
+                )
+              }
+
             </>
+
           )}
         </AnimatedView>
 

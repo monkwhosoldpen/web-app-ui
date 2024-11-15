@@ -266,7 +266,7 @@ const CreatorChannelsListItem = memo(
         <View tw="flex-1 px-4 md:px-4 py-2.5">
           <View tw="flex-row items-center">
             <Avatar
-              url={item?.img_url?.url}
+              url={item?.img_url}
               size={52}
               alt="CreatorPreview Avatar"
               tw={"pointer-events-none mr-3"}

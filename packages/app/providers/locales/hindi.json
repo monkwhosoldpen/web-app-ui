@@ -113,7 +113,7 @@
     },
     "Notifications": {
         "headerText": "अलर्ट्स में आपका स्वागत है",
-        "subheaderText": "अपने नेताओं के साथ अपडेट रहें"
+        "subheaderText": "अपने नेताओं के साथ अपडे��� रहें"
     },
     "editLocation": {
         "title": "स्थान ग्रुप"
@@ -214,7 +214,7 @@
         "Leave": "छोड़ें",
         "Leaving": "छोड़ रहे हैं...",
         "Cancel": "रद्द करें",
-        "LeaveGroupPrompt": "क्या आप इस समूह को छोड़ना चाहते हैं?",
+        "LeaveGroupPrompt": "क्या आप वाकई इस समूह को छोड़ना चाहते हैं?",
         "LeaveGroup": "समूह छोड़ें"
     },
     "netaType": {

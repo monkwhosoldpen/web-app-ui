@@ -47,7 +47,7 @@ export const MessagesHeader = (props: HeaderProps) => {
 
   useEffect(() => {
     if (props.picture) {
-      const image_url = props.picture.url;
+      const image_url = props.picture;
       setImage_url(image_url);
     }
   }, [props]);

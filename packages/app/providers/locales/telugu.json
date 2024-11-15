@@ -44,7 +44,7 @@
     },
     "popularChannelsJoined": {
         "title": "కనెక్ట్ అయిన గ్రూప్‌లు",
-        "subtext": "నేటాల మరియు నాగరికతో మీరు చేర్చిన చర్చలు."
+        "subtext": "నేటాల మరియు నాగరికత మీరు చేర్చిన చర్చలు."
     },
     "myChannelsJoined": {
         "title": "నా గ్రూప్లు",
@@ -122,5 +122,17 @@
         "formerMunicipalCorporator": "మామూలు మునిసిపల్ కార్పొరేటర్",
         "formerPanchayatMember": "మామూలు పంచాయత్ సభ్యుడు",
         "formerSarpanch": "మామూలు సర్పంచ్"
+    },
+    "channelsPage": {
+        "Notifications": "నోటిఫికేషన్లు",
+        "Alerts": "అలర్ట్స్",
+        "LeaveChannel": "ఛానెల్ వదిలివేయండి"
+    },
+    "actions": {
+        "Leave": "వదిలివేయండి",
+        "Leaving": "వదిలివేస్తున్నాము...",
+        "Cancel": "రద్దు చేయండి",
+        "LeaveGroupPrompt": "మీరు ఖచ్చితంగా ఈ గ్రూప్‌ను వదిలివేయాలనుకుంటున్నారా?",
+        "LeaveGroup": "గ్రూప్‌ను వదిలివేయండి"
     }
 }
