@@ -70,7 +70,7 @@ export const HeaderLeft = ({
               style={{ color: color }}
               tw="text-lg font-bold tracking-wider uppercase" // Increased font size to text-lg
             >
-              GoatsConnect
+              G.O.A.T Connect
             </Text>
           </View>
         </View>

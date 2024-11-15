@@ -1,8 +1,8 @@
 {
     "hello": "Hello!",
-    "headerText": "Welcome to The Goat Zone",
-    "subheaderText": "Follow at least 1 Goat to unlock the magic",
-    "announcements": "Introducing Channels: Your Hub for GOAT-Fan's Interaction",
+    "headerText": "Welcome to The G.O.A.T's Zone",
+    "subheaderText": "Follow at least 1 G.O.A.T to unlock the magic",
+    "announcements": "Introducing Groups: Your Hub for G.O.A.T-FAN Interaction",
     "menu": {
         "theme": "Theme",
         "home": "Home",
@@ -26,7 +26,7 @@
     "landing": {
         "latestContent": "Latest Content",
         "stayUpdated": "Stay Updated",
-        "connectWithNetas": "Connect with Netas",
+        "connectWithNetas": "Connect with G.O.A.T.S",
         "authenticInfo": "Only Authentic Info",
         "shareWithFans": "Share with Fans"
     },
@@ -37,14 +37,14 @@
     "signInTitle": "Sign in",
     "settings": {
         "location_new_message": "Location Channel Message",
-        "channel_new_message": "Following Channel Message",
+        "channel_new_message": "Following Group Message",
         "summary_end_of_day": "Summary End of Day",
         "summary_start_of_day": "Summary Start of Day",
         "location_new_message_description": "When a message is posted in a location channel you’ve joined.",
-        "channel_new_message_description": "When a new message is posted in a channel you are part of.",
+        "channel_new_message_description": "When a new message is posted in a group you are part of.",
         "summary_end_of_day_description": "summary_end_of_day.",
         "summary_start_of_day_description": "summary_start_of_day.",
-        "Channels": "Channels",
+        "Channels": "Groups",
         "Alerts": "Alerts",
         "push_notifications_title": "Push Notifications",
         "push_notifications_description": "Manage your app notifications",
@@ -74,12 +74,12 @@
         "connect": "Connect",
         "EmptyChannels": "No Connections Yet",
         "join": "Connect",
-        "groups_title": "Your Channels",
-        "groups_description": "All your channels here",
+        "groups_title": "Your Groups",
+        "groups_description": "All your groups here",
         "services_title": "Services",
         "services_empty": "No Services",
-        "headerText": "Welcome to Channels",
-        "subheaderText": "All your Channels here",
+        "headerText": "Welcome to Groups",
+        "subheaderText": "All your Groups here",
         "NoMessagesYet": "No Messages yet"
     },
     "Home": {
@@ -89,8 +89,8 @@
         "Start": "Start",
         "DownloadApp": "DownloadApp",
         "SelectDevice": "SelectDevice",
-        "headerText": "Welcome to Channels",
-        "subheaderText": "All your Channels here"
+        "headerText": "Welcome to Groups",
+        "subheaderText": "All your Groups here"
     },
     "Onboarding": {
         "Title": "Lastly, Welcome Again",
@@ -103,13 +103,13 @@
         "ShareMessage": " Make sure your contacts know where to follow Netas! Here’s a shareable link to blast everywhere",
         "shareTwitter": "Share on Twitter",
         "shareLink": "Share Link",
-        "subheaderText": "All your Channels here"
+        "subheaderText": "All your Groups here"
     },
     "SuperMenu": {
         "Start": "Start",
         "members": "Members",
-        "headerText": "Welcome to Channels",
-        "subheaderText": "All your Channels here"
+        "headerText": "Welcome to Groups",
+        "subheaderText": "All your Groups here"
     },
     "Notifications": {
         "headerText": "Welcome to Alerts",

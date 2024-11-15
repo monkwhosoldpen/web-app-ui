@@ -2,7 +2,7 @@
     "hello": "नमस्ते!",
     "headerText": "द नेता ज़ोन में आपका स्वागत है",
     "subheaderText": "जादू को अनलॉक करने के लिए कम से कम 1 नेता का पालन करें",
-    "announcements": "चैनल्स पेश करते हैं: नागरिक-राजनेता बातचीत",
+    "announcements": "ग्रुप्स पेश करते हैं: नागरिक-राजनेता बातचीत",
     "menu": {
         "theme": "थीम",
         "home": "होम",
@@ -37,14 +37,14 @@
     "signInTitle": "साइन इन करें",
     "settings": {
         "location_new_message": "स्थान चैनल संदेश",
-        "channel_new_message": "नए संदेश का चैनल अनुसरण",
+        "channel_new_message": "समूह संदेश का अनुसरण",
         "summary_end_of_day": "सारांश दिन के अंत में",
         "summary_start_of_day": "सारांश दिन की शुरुआत",
         "location_new_message_description": "जब आपके द्वारा ज्वाइन किए गए किसी स्थान चैनल में संदेश पोस्ट किया जाता है",
-        "channel_new_message_description": "जब आप भागीदार हो",
+        "channel_new_message_description": "जब आप भाग लेने वाले समूह में नया संदेश पोस्ट किया जाता है",
         "summary_end_of_day_description": "सारांश दिन के अंत में",
         "summary_start_of_day_description": "सारांश दिन की शुरुआत",
-        "Channels": "चैनल्स",
+        "Channels": "समूह",
         "Alerts": "अलर्ट्स",
         "push_notifications_title": "पुश सूचनाएं",
         "push_notifications_description": "अपनी ऐप सूचनाओं को प्रबंधित करें",
@@ -74,12 +74,12 @@
         "connect": "जुड़ें",
         "EmptyChannels": "अभी तक कोई कनेक्शन नहीं",
         "join": "जुड़ें",
-        "groups_title": "आपके चैनल्स",
-        "groups_description": "यहां आपके सभी चैनल्स हैं",
+        "groups_title": "आपके समूह",
+        "groups_description": "यहां आपके सभी समूह हैं",
         "services_title": "सेवाएं",
         "services_empty": "कोई सेवा नहीं",
-        "headerText": "चैनल्स में आपका स्वागत है",
-        "subheaderText": "यहां आपके सभी चैनल्स हैं",
+        "headerText": "समूह में आपका स्वागत है",
+        "subheaderText": "यहां आपके सभी समूह हैं",
         "NoMessagesYet": "No Messages yetH"
     },
     "Home": {
@@ -113,7 +113,7 @@
     },
     "Notifications": {
         "headerText": "अलर्ट्स में आपका स्वागत है",
-        "subheaderText": "अपने नेताओं के साथ अपडे��� रहें"
+        "subheaderText": "अपने नेताओं के साथ अपडे रहें"
     },
     "editLocation": {
         "title": "स्थान ग्रुप"

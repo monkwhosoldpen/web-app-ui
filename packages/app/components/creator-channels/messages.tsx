@@ -370,7 +370,7 @@ export const Messages = memo(() => {
   const listEmptyComponent = useCallback(() => {
     return (
       <AnimatedView
-        tw="ios:scale-y-[-1] android:scale-y-[1] web:justify-start android:rotate-180 w-full items-center justify-center"
+        tw="ios:scale-y-[-1] android:scale-y-[1] web:justify-start android:rotate-180 w-full items-center justify-center px-2"
         style={[
           Platform.OS !== "web"
             ? { height: windowDimension.height }
@@ -571,6 +571,7 @@ export const Messages = memo(() => {
       const bio = bioObj[selectedLanguage] || bioObj?.english;
       const location_code = item?.location_code || '';
       setLocation(location_code);
+      setIsPremium(channelDetail.data?.owner?.is_premium);
       setName(name);
       setBio(bio);
     }
