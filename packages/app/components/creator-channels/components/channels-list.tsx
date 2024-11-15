@@ -249,7 +249,6 @@ const CreatorChannelsListItem = memo(
     // const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
     // const uploadedImageUrl = item.img_url && item.img_url.length > 0 ? item.img_url[0] : null;
     // const image_url = `${supabaseURL}/storage/v1/object/public/${uploadedImageUrl}`;
-    debugger;
     return (
       <PlatformPressable
         onPress={() => {
@@ -326,7 +325,6 @@ export const CreatorChannelsListCreator = memo(
     const { mutate } = useSWRConfig();
     const matchMutate = useMatchMutate();
     const { i18n, t } = useTranslation();
-    debugger;
     return (
       <View tw="flex-1 px-4 md:px-4 py-3">
         <View tw="flex-row items-start">

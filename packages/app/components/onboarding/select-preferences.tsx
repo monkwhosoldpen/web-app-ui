@@ -87,7 +87,7 @@ export const SelectPreferences = () => {
   // }, [reset, defaultValues]);
 
   const handleSubmitForm = async () => {
-    debugger;
+    // debugger;
     // if (isLoading || isSubmitting) return;
     setStep(OnboardingStep.Social);
   };

@@ -139,6 +139,7 @@ export const ProfileTop = ({
 
   // const name = profileData?.profile['name' + '_' + selectedLanguage];
   const username = profileData?.profile.username;
+  const country_code = profileData?.profile.country_code;
   const description = profileData?.profile.description;
   const full_name = profileData?.profile.full_name;
   // const bio: any = profileData?.profile['bio' + '_' + selectedLanguage];
@@ -405,26 +406,34 @@ export const ProfileTop = ({
                 </Text>
                 <View tw="h-2 md:h-3" />
                 <View tw="flex-row items-center">
-                  {Boolean(full_name) && (
+                  {Boolean(username) && (
                     <>
                       <Text tw="text-base text-gray-600 dark:text-gray-400 md:text-lg">
-                        {`${full_name}`}
+                        @{`${username}`}
                       </Text>
                     </>
                   )}
 
                   {item?.verified ? (
                     <View tw="ml-1">
-                      <VerificationBadge size={16} bgColor={item?.is_premium ? "green" : isDark ? "white" : "black"} />
+                      <VerificationBadge size={16} bgColor={item?.is_premium ? "gold" : isDark ? "white" : "black"} />
                     </View>
                   ) : null}
+                </View>
+                <View tw="flex-row items-center pt-2">
+                  {Boolean(country_code) && (
+                    <>
+                      <Text tw="text-base text-gray-600 dark:text-gray-400 md:text-lg">
+                        {`${country_code}`}
+                      </Text>
+                    </>
+                  )}
                 </View>
                 <View tw="h-2 md:h-3" />
                 <View tw="flex-row items-center">
                   {Boolean(description) && (
                     <>
                       <Text tw="text-base text-gray-600 dark:text-gray-400 md:text-lg">
-                        {/* {designation},  {location} */}
                         {description}
                       </Text>
                     </>

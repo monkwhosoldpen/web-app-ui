@@ -349,7 +349,7 @@ export const TopCreatorTokenListItem = ({
 
               {Boolean(item?.verified) && (
                 <View tw="ml-1">
-                  <VerificationBadge size={14} bgColor={isDark ? "white" : "black"} />
+                  <VerificationBadge size={14} bgColor={item?.is_premium ? "gold" : isDark ? "white" : "black"} />
                 </View>
               )}
 
