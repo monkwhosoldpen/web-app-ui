@@ -23,7 +23,6 @@ import { breakpoints } from "design-system/theme";
 import { EmptyPlaceholder } from "../empty-placeholder";
 import { HomeItem, HomeItemSketelon } from "./home-item";
 import { TrendingCarousel } from "./trending-carousel";
-import { PopularAppsHorizontal } from "./popular-apps";
 import { useTranslation } from "react-i18next";
 import { SettingItemSeparator } from "../settings/setting-item-separator";
 import { TopPartCreatorTokens } from "./top-part-creator-tokens";
@@ -56,7 +55,7 @@ export const Home = () => {
         return (
           <>
             <SettingItemSeparator tw="my-2 md:my-8" />
-            <PopularAppsHorizontal />
+            <TopPartCreatorTokens />
             <HomeItem nft={item} mediaSize={mediaSize} index={index} />
             <SettingItemSeparator tw="my-2 md:my-8" />
           </>
