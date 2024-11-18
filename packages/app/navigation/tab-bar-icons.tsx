@@ -148,6 +148,26 @@ export const CreateTabBarIcon = ({
   );
 };
 
+const CountChannelsIndicator = () => {
+  const myInfo = useMyInfo();
+  const [followsCount, setFollowsCount] = useState<any>('');
+  useEffect(() => {
+    const unread = (myInfo?.data?.data?.follows || []).length;
+    setFollowsCount(unread);
+  }, [myInfo]);
+  return (
+    <>
+      {followsCount > 0 && (
+        <View tw="web:-right-1 absolute right-1 -top-0.5 h-4 w-4 items-center justify-center rounded-full bg-indigo-700">
+          <Text tw="text-[8px] text-white" style={{ lineHeight: 12 }}>
+            {followsCount > 99 ? "99" : followsCount}
+          </Text>
+        </View>
+      )}
+    </>
+  );
+};
+
 export const CreatorChannelsTabBarIcon = ({
   color,
   focused,
@@ -155,14 +175,6 @@ export const CreatorChannelsTabBarIcon = ({
   tooltipSide?: ContentProps["side"];
 }) => {
   const { t } = useTranslation();
-  const myInfo = useMyInfo();
-  const [unreadData, setUnreadData] = useState<any>('');
-
-  useEffect(() => {
-    const unread = (myInfo?.data?.data?.profile?.follows || []).length;
-    setUnreadData(unread);
-  }, [myInfo]);
-
   return (
     <TabBarIcon tab="/groups">
       {focused ? (
@@ -170,16 +182,24 @@ export const CreatorChannelsTabBarIcon = ({
       ) : (
         <CreatorChannel width={24} height={24} color={color} />
       )}
-      {unreadData > 0 && (
+      <ErrorBoundary renderFallback={() => <></>}>
+        <Suspense fallback={null}>
+          <CountChannelsIndicator />
+        </Suspense>
+      </ErrorBoundary>
+      <Text style={{ marginVertical: 0, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
+        {t("menu.channels")}
+      </Text>
+      {/* {unreadData > 0 && (
         <View tw="web:-right-1 absolute right-1 -top-0.5 h-4 w-4 items-center justify-center rounded-full bg-indigo-700">
           <Text tw="text-[8px] text-white" style={{ lineHeight: 12 }}>
             {unreadData > 99 ? "99" : unreadData}
           </Text>
         </View>
-      )}
-      <Text style={{ marginVertical: 1, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
+      )} */}
+      {/* <Text style={{ marginVertical: 1, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
         {t("menu.channels")}
-      </Text>
+      </Text> */}
     </TabBarIcon>
   );
 };
@@ -242,11 +262,11 @@ export const NotificationsTabBarIcon = ({
       ) : (
         <Bell style={{ zIndex: 1 }} width={24} height={24} color={color} />
       )}
-      <ErrorBoundary renderFallback={() => <></>}>
+      {/* <ErrorBoundary renderFallback={() => <></>}>
         <Suspense fallback={null}>
           <UnreadNotificationIndicator />
         </Suspense>
-      </ErrorBoundary>
+      </ErrorBoundary> */}
       <Text style={{ marginVertical: 0, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
         {t("menu.alerts")}
       </Text>
@@ -350,32 +370,6 @@ export const SettingsTabBarIcon = ({
           {t("menu.settings")}
         </Text>
       </TabBarIcon> */}
-    </>
-  );
-};
-
-export const MySpaceTabBarIcon = ({
-  color,
-  focused,
-}: TabBarIconProps & {
-  tooltipSide?: ContentProps["side"];
-}) => {
-  const { t } = useTranslation();
-  return (
-    <>
-      <TabBarIcon tab="/space">
-        <>
-          {focused ? (
-            <HotFilled style={{ zIndex: 1 }} width={24} height={24} color={color} />
-          ) : (
-            <Hot style={{ zIndex: 1 }} width={24} height={24} color={color} />
-          )}
-        </>
-        <Text style={{ marginVertical: 1, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
-          {/* {t("menu.settings")} */}
-          Space
-        </Text>
-      </TabBarIcon>
     </>
   );
 };

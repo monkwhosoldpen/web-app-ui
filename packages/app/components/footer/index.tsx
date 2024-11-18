@@ -12,7 +12,6 @@ import {
 import {
   CreatorChannelsTabBarIcon,
   HomeTabBarIcon,
-  MySpaceTabBarIcon,
   NotificationsTabBarIcon,
   ProfileTabBarIcon,
   SettingsTabBarIcon,

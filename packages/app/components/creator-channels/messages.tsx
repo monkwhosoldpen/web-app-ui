@@ -131,6 +131,19 @@ const getItemType = (item: ChannelMessageItem) => {
   return "message";
 };
 
+type ChannelOwner = {
+  is_premium?: boolean;
+  subGroups?: Array<{
+    id: string;
+    name: string;
+    memberCount: number;
+  }>;
+  metadata_with_translations?: {
+    name?: Record<string, string>;
+    bio?: Record<string, string>;
+  };
+};
+
 export const Messages = memo(() => {
   const { mutate: globalMutate } = useSWRConfig();
   const listRef = useRef<FlashList<any>>(null);
@@ -168,13 +181,17 @@ export const Messages = memo(() => {
 
   const { slug } = useContext(AppStateContext);
 
+  const [activeSubgroupId, setActiveSubgroupId] = useState("main");
+
+  const channelDetail = useChannelById(channelId);
+  const { data, isLoading, fetchMore, refresh, isLoadingMore, error, refetch } = useChannelMessages(channelId);
+
   useEffect(() => {
     if (slug) {
       console.log('New notification received at:', slug);
-      // Perform any actions needed in response to the notification
       refresh();
     }
-  }, [slug]);
+  }, [slug, refresh]);
 
   const { t, i18n } = useTranslation();
 
@@ -217,7 +234,6 @@ export const Messages = memo(() => {
     },
   });
 
-  const channelDetail = useChannelById(channelId);
   const membersCount = channelDetail.data?.member_count || 0;
 
   // const { data: dropDataBySlug, isLoading: nftDetailLoading } =
@@ -263,9 +279,6 @@ export const Messages = memo(() => {
     isMdWidth,
     redirectToGroupSocialShare,
   ]);
-
-  const { data, isLoading, fetchMore, refresh, isLoadingMore, error } =
-    useChannelMessages(channelId);
 
   const isCurrentUserOwner =
     channelDetail.data?.owner?.profile_id === user.user?.data.profile.profile_id;
@@ -478,55 +491,11 @@ export const Messages = memo(() => {
     address: channelDetail.data?.owner?.username,
   });
 
-  const [activeSubgroupId, setActiveSubgroupId] = useState("main");
-
-  // Mock subgroups data
-  const mockSubgroups: any = [
-    // Regular case
-    { id: "main", name: "Main", memberCount: 150 },
-    { id: "announcements", name: "Announcements", memberCount: 145 },
-    { id: "general", name: "General Discussion", memberCount: 130 },
-
-    // No members
-    { id: "emptyGroup", name: "Empty Group", memberCount: 0 },
-
-    // Edge case: Very high member count (possible max number)
-    { id: "massiveGroup", name: "Massive Group", memberCount: 10000 },
-
-    // Edge case: Very low member count (single member)
-    { id: "singleMember", name: "Single Member", memberCount: 1 },
-
-    // Irregular/long names (UI should handle truncation or wrapping)
-    { id: "longNameGroup", name: "This is a very long name that might get truncated depending on the UI layout", memberCount: 50 },
-
-    // Special characters in names
-    { id: "specialChars", name: "Group with special characters !@#$%^&*()", memberCount: 25 },
-
-    // Edge case: Names with spaces or inconsistent casing
-    { id: "leadingSpace", name: " Leading Space", memberCount: 100 },
-    { id: "trailingSpace", name: "Trailing Space ", memberCount: 80 },
-    { id: "mixedCaseGroup", name: "MiXeD CaSe GrOuP", memberCount: 90 },
-
-    // Edge case: Name with numbers
-    { id: "numericGroup", name: "Group 123", memberCount: 200 },
-
-    // Empty name edge case
-    { id: "emptyName", name: "", memberCount: 60 },
-
-    // Group with the same name but different IDs
-    { id: "duplicateName1", name: "Duplicate Name", memberCount: 50 },
-    { id: "duplicateName2", name: "Duplicate Name", memberCount: 45 },
-
-    // Edge case: Minimum subgroup name length (empty string or one character)
-    { id: "a", name: "A", memberCount: 30 },
-
-    // Maximum subgroup name length (100 characters)
-    { id: "maxLengthName", name: "A".repeat(100), memberCount: 110 },
-
-    // Null or undefined member count (handles errors or fallback)
-    { id: "nullCount", name: "Null Count", memberCount: null },
-    { id: "undefinedCount", name: "Undefined Count", memberCount: undefined },
-  ];
+  const channelData = useMemo(() => ({
+    isPremium: (channelDetail.data?.owner as ChannelOwner)?.is_premium,
+    subGroups: (channelDetail.data?.owner as ChannelOwner)?.subGroups || [],
+    metadata: (channelDetail.data?.owner as ChannelOwner)?.metadata_with_translations
+  }), [channelDetail.data?.owner]);
 
   if (!channelId) {
     return (
@@ -556,6 +525,7 @@ export const Messages = memo(() => {
   const [location, setLocation] = useState<any>('');
   const [bio, setBio] = useState<any>('');
   const [isPremium, setIsPremium] = useState<any>(item?.is_premium);
+  const [subgroups, setSubgroups] = useState<any>([]);
 
   const { onToggleFollow } = useFollow({
     username: item?.username,
@@ -565,20 +535,25 @@ export const Messages = memo(() => {
 
   useEffect(() => {
     if (item) {
-      const nameObj = item?.metadata_with_translations?.name || {};
-      const bioObj = item?.metadata_with_translations?.bio || {};
+      const nameObj = channelData.metadata?.name || {};
+      const bioObj = channelData.metadata?.bio || {};
       const name = nameObj[selectedLanguage] || nameObj?.english;
       const bio = bioObj[selectedLanguage] || bioObj?.english;
       const location_code = item?.location_code || '';
+
       setLocation(location_code);
-      setIsPremium(channelDetail.data?.owner?.is_premium);
+      setIsPremium(channelData.isPremium);
+      setSubgroups(channelData.subGroups);
       setName(name);
       setBio(bio);
     }
-  }, [selectedLanguage, item]);
+  }, [selectedLanguage, item, channelData]);
 
   useEffect(() => {
-  }, [selectedLanguage, item]);
+    if (activeSubgroupId) {
+      refetch({ activeSubgroupId });
+    }
+  }, [activeSubgroupId, refetch]);
 
   return (
     <>
@@ -594,9 +569,7 @@ export const Messages = memo(() => {
       >
         <MessagesHeader
           username={channelDetail.data?.owner?.username}
-          title={
-            name
-          }
+          title={name}
           picture={channelDetail.data?.owner?.img_url}
           onPressSettings={() => {
             const as = `/groups/${channelId}/settings`;
@@ -626,116 +599,85 @@ export const Messages = memo(() => {
         <AnimatedView
           tw={[
             "flex-1 overflow-hidden",
-            //isUserAdmin ? "android:pb-12 ios:pb-8 web:pb-12" : "",
-            showCollectToUnlock ? "pb-2" : "", // since we always show the input, leave the padding
+            showCollectToUnlock ? "pb-2" : "",
           ]}
         >
-          {isLoading ||
-            channelDetail.isLoading ? (
-            <MessageSkeleton />
+          {isPremium ? (
+            <View tw="flex-1 flex-row">
+              <SubGroupsSidebar
+                subgroups={subgroups || mockSubgroups}
+                onSelectSubgroup={setActiveSubgroupId}
+                activeSubgroupId={activeSubgroupId}
+              />
+              <AnimatedView
+                tw={[
+                  "flex-1 overflow-hidden",
+                  showCollectToUnlock ? "pb-2" : "",
+                ]}
+                style={{ marginLeft: 50 }}
+              >
+                {isLoading || channelDetail.isLoading ? (
+                  <MessageSkeleton />
+                ) : (
+                  <AnimatedInfiniteScrollListWithRef
+                    ref={listRef}
+                    keyExtractor={keyExtractor}
+                    data={data}
+                    onEndReached={onLoadMore}
+                    inverted
+                    getItemType={getItemType}
+                    drawDistance={200}
+                    scrollEnabled={data.length > 0}
+                    overscan={4}
+                    onScroll={scrollhandler}
+                    useWindowScroll={false}
+                    estimatedItemSize={300}
+                    showsVerticalScrollIndicator={Platform.OS !== "android"}
+                    keyboardDismissMode={
+                      Platform.OS === "ios" ? "interactive" : "on-drag"
+                    }
+                    renderItem={renderItem}
+                    extraData={extraData}
+                    ListHeaderComponent={renderListHeader}
+                    CellRendererComponent={CustomCellRenderer}
+                    ListEmptyComponent={listEmptyComponent}
+                    ListFooterComponent={renderListFooter}
+                  />
+                )}
+              </AnimatedView>
+            </View>
           ) : (
+            // Non-premium content
             <>
-              {
-                isPremium && (
-                  <View tw="flex-1 flex-row">
-                    <SubGroupsSidebar
-                      subgroups={mockSubgroups}
-                      onSelectSubgroup={setActiveSubgroupId}
-                      activeSubgroupId={activeSubgroupId}
-                    />
-                    <AnimatedView
-                      tw={[
-                        "flex-1 overflow-hidden",
-                        showCollectToUnlock ? "pb-2" : "",
-                      ]}
-                      style={{ marginLeft: 50 }}
-                    >
-                      {isLoading ||
-                        channelDetail.isLoading ? (
-                        <MessageSkeleton />
-                      ) : (
-                        <>
-                          <>
-                            <AnimatedInfiniteScrollListWithRef
-                              ref={listRef}
-                              keyExtractor={keyExtractor}
-                              data={data}
-                              onEndReached={onLoadMore}
-                              inverted
-                              getItemType={getItemType}
-                              drawDistance={200}
-                              scrollEnabled={data.length > 0}
-                              overscan={4}
-                              onScroll={scrollhandler}
-                              useWindowScroll={false}
-                              estimatedItemSize={300}
-                              // android > 12 flips the scrollbar to the left, FlashList bug
-                              showsVerticalScrollIndicator={Platform.OS !== "android"}
-                              keyboardDismissMode={
-                                Platform.OS === "ios" ? "interactive" : "on-drag"
-                              }
-                              renderItem={renderItem}
-                              extraData={extraData}
-                              ListHeaderComponent={renderListHeader}
-                              CellRendererComponent={CustomCellRenderer}
-                              ListEmptyComponent={listEmptyComponent}
-                              ListFooterComponent={renderListFooter}
-                            />
-                          </>
-                        </>
-                      )}
-                    </AnimatedView>
-                  </View>
-                )
-              }
-
-              {
-                !isPremium && (
-                  <AnimatedView
-                    tw={[
-                      "flex-1 overflow-hidden",
-                      //isUserAdmin ? "android:pb-12 ios:pb-8 web:pb-12" : "",
-                      showCollectToUnlock ? "pb-2" : "", // since we always show the input, leave the padding
-                    ]}
-                  >
-                    {isLoading ||
-                      channelDetail.isLoading ? (
-                      <MessageSkeleton />
-                    ) : (
-                      <>
-                        <AnimatedInfiniteScrollListWithRef
-                          ref={listRef}
-                          keyExtractor={keyExtractor}
-                          data={data}
-                          onEndReached={onLoadMore}
-                          inverted
-                          getItemType={getItemType}
-                          drawDistance={200}
-                          scrollEnabled={data.length > 0}
-                          overscan={4}
-                          onScroll={scrollhandler}
-                          useWindowScroll={false}
-                          estimatedItemSize={300}
-                          // android > 12 flips the scrollbar to the left, FlashList bug
-                          showsVerticalScrollIndicator={Platform.OS !== "android"}
-                          keyboardDismissMode={
-                            Platform.OS === "ios" ? "interactive" : "on-drag"
-                          }
-                          renderItem={renderItem}
-                          extraData={extraData}
-                          ListHeaderComponent={renderListHeader}
-                          CellRendererComponent={CustomCellRenderer}
-                          ListEmptyComponent={listEmptyComponent}
-                          ListFooterComponent={renderListFooter}
-                        />
-                      </>
-                    )}
-                  </AnimatedView>
-                )
-              }
-
+              {isLoading || channelDetail.isLoading ? (
+                <MessageSkeleton />
+              ) : (
+                <AnimatedInfiniteScrollListWithRef
+                  ref={listRef}
+                  keyExtractor={keyExtractor}
+                  data={data}
+                  onEndReached={onLoadMore}
+                  inverted
+                  getItemType={getItemType}
+                  drawDistance={200}
+                  scrollEnabled={data.length > 0}
+                  overscan={4}
+                  onScroll={scrollhandler}
+                  useWindowScroll={false}
+                  estimatedItemSize={300}
+                  showsVerticalScrollIndicator={Platform.OS !== "android"}
+                  keyboardDismissMode={
+                    Platform.OS === "ios" ? "interactive" : "on-drag"
+                  }
+                  renderItem={renderItem}
+                  extraData={extraData}
+                  ListHeaderComponent={renderListHeader}
+                  CellRendererComponent={CustomCellRenderer}
+                  ListEmptyComponent={listEmptyComponent}
+                  ListFooterComponent={renderListFooter}
+                />
+              )}
             </>
-
           )}
         </AnimatedView>
 
@@ -795,3 +737,10 @@ export const Messages = memo(() => {
 });
 
 Messages.displayName = "Messages";
+
+// Mock subgroups data
+export const mockSubgroups: any = [
+  { id: "all", name: "All Messages", memberCount: 0 },
+  { id: "odd", name: "Odd Messages", memberCount: 0 },
+  { id: "even", name: "Even Messages", memberCount: 0 },
+];

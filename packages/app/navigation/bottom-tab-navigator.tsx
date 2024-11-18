@@ -18,7 +18,6 @@ import { BottomTabbar } from "./bottom-tab-bar";
 import {
   CreatorChannelsTabBarIcon,
   HomeTabBarIcon,
-  MySpaceTabBarIcon,
   NotificationsTabBarIcon,
   ProfileTabBarIcon,
   SettingsTabBarIcon,

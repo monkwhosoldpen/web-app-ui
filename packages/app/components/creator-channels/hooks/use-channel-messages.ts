@@ -57,7 +57,7 @@ export const getChannelMessageKey = (channelId: string | number) => {
 };
 
 export const useChannelMessages = (channelId?: string | number) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const selectedLanguage = i18n.language;
   const language = '' || selectedLanguage;
   let indexRef = useRef(0);
@@ -81,6 +81,7 @@ export const useChannelMessages = (channelId?: string | number) => {
       pageSize: PAGE_SIZE,
     }
   );
+
   const newData = useMemo(() => {
     let newData: ChannelMessageResponse = [];
     if (queryState.data) {
@@ -93,8 +94,16 @@ export const useChannelMessages = (channelId?: string | number) => {
     return newData;
   }, [queryState.data]);
 
+  const refetch = useCallback(async (param: any) => {
+    console.log(param);
+    if (queryState.mutate) {
+      await queryState.mutate(undefined, { revalidate: true });
+    }
+  }, [queryState.mutate]);
+
   return {
     ...queryState,
     data: newData,
+    refetch,
   };
 };

@@ -306,7 +306,7 @@ export const TopCreatorTokenListItem = ({
       tw={["py-2.5 mx-2", tw].join(" ")}
       onPress={() => {
         router.push(
-          `/@${item?.username}`
+          `/groups/${item?.username}`
         );
       }}
       {...rest}>
