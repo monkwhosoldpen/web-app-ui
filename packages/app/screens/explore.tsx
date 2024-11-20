@@ -84,7 +84,7 @@ const Profile = ({ username, viewValue }: ProfileScreenProps) => {
     error,
   } = useUserProfile({ address: username });
 
-  const servicesByProfile: any = profileData?.data?.services || [];
+  const subGroupsGoat: any = profileData?.data?.subGroups || [];
   const is_premium: any = profileData?.data?.profile?.is_premium || false;
   const profileId = profileData?.data?.profile.profile_id;
 
@@ -248,7 +248,7 @@ const Profile = ({ username, viewValue }: ProfileScreenProps) => {
                         <>
                           <View tw="">
                             <View tw="px-4 py-2 mb-20">
-                              <SubChannels data={servicesByProfile} />
+                              <SubChannels data={subGroupsGoat} />
                             </View>
                           </View>
                         </>

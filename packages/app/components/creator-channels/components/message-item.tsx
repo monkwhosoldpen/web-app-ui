@@ -43,6 +43,8 @@ import { useTranslation } from "react-i18next";
 
 import { useEffect, useState } from 'react';
 import { ZulipBadge } from "./zulip-badge";
+import { Text } from "@showtime-xyz/universal.text";
+import { Button } from "@showtime-xyz/universal.button";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -51,17 +53,23 @@ export const MessageItem = memo(
     item,
     editMessageIdSharedValue,
     permissions,
+    statusUser,
+    isPremium,
+    handleOnboard,
   }: MessageItemProps & {
     edition?: any;
     isUserAdmin?: boolean;
     permissions?: ChannelById["permissions"];
     listRef: RefObject<FlashList<any>>;
     channelOwnerProfileId?: number;
+    statusUser: string;
+    isPremium: boolean;
     editMessageIdSharedValue: SharedValue<number | undefined>;
     editMessageItemDimension: SharedValue<{
       height: number;
       pageY: number;
     }>;
+    handleOnboard: () => void;
   }) => {
     const { channel_message } = item;
 
@@ -96,6 +104,20 @@ export const MessageItem = memo(
     useEffect(() => {
 
     }, [selectedLanguage, item]);
+
+    const getBorderColor = (status: string) => {
+      if (isPremium) {
+        switch (status) {
+          case 'IN_PROGRESS':
+            return 'border-orange-500';
+          case 'APPROVED':
+            return 'border-green-500';
+          default:
+            return 'border-red-500';
+        }
+      }
+      return ''; // No border for non-premium messages
+    };
 
     const style = useAnimatedStyle(() => {
       if (editMessageIdSharedValue?.value === channel_message?.id) {
@@ -141,6 +163,88 @@ export const MessageItem = memo(
         : "";
       setMessageContent(ret);
     }, [selectedLanguage, item]);
+
+    const isApproved = statusUser === 'APPROVED';
+    const blurStyle = !isApproved ? { filter: 'blur(4px)' } : {};
+
+    // Add debug logging
+    useEffect(() => {
+      console.log('MessageItem Props:', {
+        statusUser,
+        isPremium,
+        messageId: item.channel_message?.id,
+        username: item.channel_message?.sent_by?.profile?.username
+      });
+    }, [statusUser, isPremium, item]);
+
+    // Add a function to determine if message should be blurred
+    const shouldBlurMessage = () => {
+      const shouldBlur = isPremium && statusUser !== 'APPROVED';
+      console.log('🎭 Blur Check:', {
+        messageId: item.channel_message?.id,
+        isPremium,
+        statusUser,
+        shouldBlur,
+      });
+      return shouldBlur;
+    };
+
+    // Add message blur styles
+    const messageBlurStyle = shouldBlurMessage() ? { filter: 'blur(4px)' } : {};
+
+    // Log when component mounts/updates with key props
+    useEffect(() => {
+      console.log('🔄 MessageItem Render:', {
+        messageId: item.channel_message?.id,
+        isPremium,
+        statusUser,
+        username: item.channel_message?.sent_by?.profile?.username,
+        hasAttachments: item.channel_message?.attachments?.length > 0,
+      });
+    }, [item, isPremium, statusUser]);
+
+    // Log blur state changes
+    useEffect(() => {
+      const isBlurred = shouldBlurMessage();
+      console.log('🔒 Message Visibility:', {
+        messageId: item.channel_message?.id,
+        isPremium,
+        statusUser,
+        isBlurred,
+        messageLength: item.channel_message?.body_text_length,
+      });
+    }, [isPremium, statusUser, item.channel_message?.id, item.channel_message?.body_text_length]);
+
+    // Log when onboard button is pressed
+    const handleOnboardPress = () => {
+      console.log('👆 Onboard Button Pressed:', {
+        messageId: item.channel_message?.id,
+        statusUser,
+        isPremium,
+      });
+      if (handleOnboard) {
+        handleOnboard();
+      } else {
+        console.warn('handleOnboard function not provided');
+      }
+    };
+
+    // Log translated content processing
+    useEffect(() => {
+      console.log('🌐 Content Translation:', {
+        messageId: item.channel_message?.id,
+        hasTranslatedContent: !!item.translated_content,
+        selectedLanguage,
+        originalLength: item.channel_message?.body?.length,
+        processedLength: messageContent?.length,
+      });
+    }, [
+      selectedLanguage, 
+      item.channel_message?.id,
+      item.channel_message?.body?.length,
+      item.translated_content,
+      messageContent
+    ]);
 
     return (
       <>
@@ -273,11 +377,29 @@ export const MessageItem = memo(
               ) : null}
 
             </LeanView>
+
+            {isPremium && statusUser !== 'APPROVED' && (
+              <LeanView tw="absolute inset-0 items-center justify-center bg-black/5">
+                <Button
+                  onPress={handleOnboardPress}
+                  variant="primary"
+                  size="small"
+                  labelTW="font-semibold"
+                >
+                  Unlock Premium Content
+                </Button>
+              </LeanView>
+            )}
           </LeanView>
         </AnimatedView>
-
       </>
     );
+  },
+  // Update comparison function to include relevant props
+  (prevProps, nextProps) => {
+    return prevProps.statusUser === nextProps.statusUser &&
+           prevProps.isPremium === nextProps.isPremium &&
+           prevProps.item.channel_message?.id === nextProps.item.channel_message?.id;
   }
 );
 

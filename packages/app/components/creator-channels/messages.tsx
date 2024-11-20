@@ -37,7 +37,7 @@ import { colors } from "@showtime-xyz/universal.tailwind";
 import { Text } from "@showtime-xyz/universal.text";
 import { View } from "@showtime-xyz/universal.view";
 
-import { useUserProfile } from "app/hooks/api-hooks";
+import { useMyInfo, useUserProfile } from "app/hooks/api-hooks";
 import { usePlatformBottomHeight } from "app/hooks/use-platform-bottom-height";
 import { useRedirectToChannelCongrats } from "app/hooks/use-redirect-to-channel-congrats";
 import { useRedirectToCreatorTokenSocialShare } from "app/hooks/use-redirect-to-creator-token-social-share-screen";
@@ -188,14 +188,50 @@ export const Messages = memo(() => {
 
   useEffect(() => {
     if (slug) {
-      console.log('New notification received at:', slug);
+      console.log('🔄 Refresh triggered by new notification:', {
+        slug,
+        channelId,
+        currentDataLength: data?.length
+      });
       refresh();
     }
   }, [slug, refresh]);
 
+  useEffect(() => {
+    if (activeSubgroupId) {
+      console.log('🔄 Refetch triggered by subgroup change:', {
+        activeSubgroupId,
+        channelId,
+        currentDataLength: data?.length
+      });
+      refetch({ activeSubgroupId });
+    }
+  }, [activeSubgroupId, refetch]);
+
   const { t, i18n } = useTranslation();
 
   const selectedLanguage = i18n.language;
+
+  const { refetchMyInfo, data: myInfoData } = useMyInfo();
+
+  const [statusUser, setStatusUser] = useState<string>('loading');
+  const [isPremium, setIsPremium] = useState<any>(false);
+
+  useEffect(() => {
+    if (!myInfoData?.data?.profile?.user_metadata?.channels) {
+      setStatusUser('NOT_FOUND');
+      return;
+    }
+    const channels = myInfoData.data.profile.user_metadata.channels;
+    const channelStatus = channels.find((channel: any) => 
+      channel.channelId === channelId
+    )?.status;
+    const newStatus = channelStatus || 'NOT_FOUND';
+    setStatusUser(channelStatus);
+    if (newStatus === 'NOT_FOUND') {
+    }
+
+  }, [myInfoData, channelId, router, isUserAdmin]);
 
   useEffect(() => {
     editMessageIdSharedValue.value = editMessage?.id;
@@ -331,6 +367,20 @@ export const Messages = memo(() => {
     }
   }, [channelDetail.data?.owner, error, router, fresh]);
 
+  const handleOnboard = useCallback(() => {
+    router.push(
+      {
+        pathname: Platform.OS === "web" ? router.pathname : "/profile/onboarding-fan",
+        query: {
+          ...router.query,
+          onboardingFanModal: true,
+          channelId: channelId,
+        },
+      },
+      Platform.OS === "web" ? router.asPath : undefined
+    );
+  }, [router, channelId]);
+
   const renderItem: ListRenderItem<ChannelMessageItem> = useCallback(
     ({ item, extraData }) => {
       return (
@@ -343,6 +393,9 @@ export const Messages = memo(() => {
           editMessageIdSharedValue={editMessageIdSharedValue}
           editMessageItemDimension={editMessageItemDimension}
           edition={null}
+          statusUser={statusUser}
+          isPremium={isPremium}
+          handleOnboard={handleOnboard}
           isUserAdmin={isUserAdmin}
           permissions={channelDetail.data?.permissions}
           channelOwnerProfileId={channelDetail?.data?.owner?.profile_id}
@@ -355,6 +408,9 @@ export const Messages = memo(() => {
       isUserAdmin,
       channelDetail.data?.permissions,
       channelDetail.data?.owner?.profile_id,
+      statusUser,
+      isPremium,
+      handleOnboard
     ]
   );
 
@@ -524,7 +580,7 @@ export const Messages = memo(() => {
   const [name, setName] = useState<any>('');
   const [location, setLocation] = useState<any>('');
   const [bio, setBio] = useState<any>('');
-  const [isPremium, setIsPremium] = useState<any>(item?.is_premium);
+  
   const [subgroups, setSubgroups] = useState<any>([]);
 
   const { onToggleFollow } = useFollow({
@@ -540,10 +596,9 @@ export const Messages = memo(() => {
       const name = nameObj[selectedLanguage] || nameObj?.english;
       const bio = bioObj[selectedLanguage] || bioObj?.english;
       const location_code = item?.location_code || '';
-
       setLocation(location_code);
-      setIsPremium(channelData.isPremium);
-      setSubgroups(channelData.subGroups);
+      setIsPremium(item.is_premium);
+      setSubgroups(item.subGroups);
       setName(name);
       setBio(bio);
     }
@@ -554,6 +609,10 @@ export const Messages = memo(() => {
       refetch({ activeSubgroupId });
     }
   }, [activeSubgroupId, refetch]);
+
+  // Add logging to track data changes
+  useEffect(() => {
+  }, [data, isLoading, isLoadingMore, error]);
 
   return (
     <>
@@ -602,53 +661,22 @@ export const Messages = memo(() => {
             showCollectToUnlock ? "pb-2" : "",
           ]}
         >
-          {isPremium ? (
-            <View tw="flex-1 flex-row">
+          <View tw={isPremium ? "flex-1 flex-row" : "flex-1"}>
+            {isPremium && (
               <SubGroupsSidebar
                 subgroups={subgroups || mockSubgroups}
                 onSelectSubgroup={setActiveSubgroupId}
                 activeSubgroupId={activeSubgroupId}
               />
-              <AnimatedView
-                tw={[
-                  "flex-1 overflow-hidden",
-                  showCollectToUnlock ? "pb-2" : "",
-                ]}
-                style={{ marginLeft: 50 }}
-              >
-                {isLoading || channelDetail.isLoading ? (
-                  <MessageSkeleton />
-                ) : (
-                  <AnimatedInfiniteScrollListWithRef
-                    ref={listRef}
-                    keyExtractor={keyExtractor}
-                    data={data}
-                    onEndReached={onLoadMore}
-                    inverted
-                    getItemType={getItemType}
-                    drawDistance={200}
-                    scrollEnabled={data.length > 0}
-                    overscan={4}
-                    onScroll={scrollhandler}
-                    useWindowScroll={false}
-                    estimatedItemSize={300}
-                    showsVerticalScrollIndicator={Platform.OS !== "android"}
-                    keyboardDismissMode={
-                      Platform.OS === "ios" ? "interactive" : "on-drag"
-                    }
-                    renderItem={renderItem}
-                    extraData={extraData}
-                    ListHeaderComponent={renderListHeader}
-                    CellRendererComponent={CustomCellRenderer}
-                    ListEmptyComponent={listEmptyComponent}
-                    ListFooterComponent={renderListFooter}
-                  />
-                )}
-              </AnimatedView>
-            </View>
-          ) : (
-            // Non-premium content
-            <>
+            )}
+            
+            <AnimatedView
+              tw={[
+                "flex-1 overflow-hidden",
+                showCollectToUnlock ? "pb-2" : "",
+              ]}
+              style={isPremium ? { marginLeft: 50 } : undefined}
+            >
               {isLoading || channelDetail.isLoading ? (
                 <MessageSkeleton />
               ) : (
@@ -671,34 +699,19 @@ export const Messages = memo(() => {
                   }
                   renderItem={renderItem}
                   extraData={extraData}
+                  isPremium={isPremium}
+                  statusUser={statusUser}
+                  handleOnboard={handleOnboard}
                   ListHeaderComponent={renderListHeader}
                   CellRendererComponent={CustomCellRenderer}
                   ListEmptyComponent={listEmptyComponent}
                   ListFooterComponent={renderListFooter}
                 />
               )}
-            </>
-          )}
+            </AnimatedView>
+          </View>
         </AnimatedView>
 
-        {/* <FollowButtonSmall
-          size={"small"}
-          tw={["",]}
-          style={{ backgroundColor: "#08F6CC", height: 26 }}
-          name={channelId}
-          profileId={channelDetail?.data?.owner?.profile_id}
-          onToggleFollow={onToggleFollow}
-        /> */}
-        {/* <View style={{ width: 100, height: 25, paddingTop: 4 }}>
-          <FollowButtonSmall
-            size={"small"}
-            tw={["",]}
-            style={{ backgroundColor: "#08F6CC", height: 26 }}
-            name={channelId}
-            profileId={channelDetail?.data?.owner?.profile_id}
-            onToggleFollow={onToggleFollow}
-          />
-        </View> */}
         <MessageInput
           listRef={listRef}
           channelId={channelId}
@@ -722,7 +735,6 @@ export const Messages = memo(() => {
                     offset: 0,
                     animated: true,
                   });
-                  // since android does not trigger onMomentScrollEnd imperatively, we need to hide the button manually
                   if (Platform.OS === "android") {
                     setShowScrollToBottom(false);
                   }

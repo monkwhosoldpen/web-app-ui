@@ -34,6 +34,7 @@ import { ExploreScreen } from "app/screens/explore";
 import { HeaderLeft } from "app/components/header";
 import { HeaderRightSm } from "app/components/header/header-right.sm";
 import { View } from "@showtime-xyz/universal.view";
+import { OnboardingFanScreen } from "app/screens/onboarding-fan";
 
 const Stack = createStackNavigator<RootStackNavigatorParams>();
 
@@ -158,6 +159,7 @@ export function RootStackNavigator() {
       >
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="onboardingFan" component={OnboardingFanScreen} />
         <Stack.Screen name="manifesto" component={ManifestoScreen} />
         <Stack.Screen name="donate" component={DonationsScreen} />
         {/* <Stack.Screen name="editProfile" component={EditProfileScreen} /> */}

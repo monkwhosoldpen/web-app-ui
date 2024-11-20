@@ -88,6 +88,7 @@ type RootStackNavigatorParams = {
   search: undefined;
   login: undefined;
   editProfile: undefined;
+  onboardingFan: undefined;
   onboarding: undefined;
   addEmail: undefined;
   editPreferences: undefined;

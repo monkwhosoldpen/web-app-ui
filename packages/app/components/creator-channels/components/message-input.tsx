@@ -25,6 +25,7 @@ import { Profile } from "app/types";
 import { ChannelById } from "../types";
 import { View } from "@showtime-xyz/universal.view";
 import { FollowButtonSmall } from "app/components/follow-button-small";
+import { useMyInfo } from "app/hooks/api-hooks";
 
 export const ScrollToBottomButton = ({ onPress }: { onPress: any }) => {
   return (
@@ -37,7 +38,25 @@ export const ScrollToBottomButton = ({ onPress }: { onPress: any }) => {
   );
 };
 
-export const MessageBoxUnavailable = ({ channelId }: any) => {
+import { useCallback, useState } from "react";
+import { Text } from "@showtime-xyz/universal.text";
+import { OnboardButtonSmall } from "app/components/onboard-button-small";
+
+
+export const MessageBoxUnavailable = ({ channelId, channelOwnerProfile }: any) => {
+  const { refetchMyInfo, data: myInfoData } = useMyInfo();
+
+  const [statusUser, setStatusUser] = useState<any>(null);
+
+  useEffect(() => {
+    console.log(myInfoData);
+    const statusUser_ = myInfoData
+      ? myInfoData?.data?.profile?.is_anonymous
+        ? "Anonymous"
+        : "Non Anonymous"
+      : "NOT Logged In";
+    setStatusUser(statusUser_);
+  }, [myInfoData]);
   return (
     <>
       <View tw="p-0">
@@ -54,18 +73,17 @@ export const MessageBoxUnavailable = ({ channelId }: any) => {
               />
             </View>
 
-            <View tw="ml-0 pr-4">
+            {/* <View tw="ml-0 pr-4">
               <View style={{ width: 100, height: 26, paddingTop: 4 }}>
-                <FollowButtonSmall
+                <Text>{statusUser}</Text>
+                <OnboardButtonSmall
                   size={"small"}
                   tw={["",]}
                   style={{ backgroundColor: "#08F6CC", height: 26 }}
-                  name={channelId}
-                  profileId={channelId}
-                // onToggleFollow={onToggleFollow}
+                  name={channelId} username={channelId}
                 />
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
@@ -78,6 +96,7 @@ export const MessageInput = memo(
     channelId,
     editMessage,
     keyboard,
+    channelOwnerProfile
   }: {
     listRef: RefObject<FlashList<any>>;
     channelId: string;
@@ -145,7 +164,7 @@ export const MessageInput = memo(
     return (
       <>
         <Animated.View style={style}>
-          <MessageBoxUnavailable channelId={channelId} />
+          <MessageBoxUnavailable channelId={channelId} channelOwnerProfile={channelOwnerProfile} />
         </Animated.View>
       </>
     );

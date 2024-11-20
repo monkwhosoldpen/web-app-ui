@@ -34,6 +34,12 @@ export const LoginWithGuest = () => {
               options: {
                 data: {
                   captcha_completed_at: null,
+                  channels: [
+                    {
+                        channelId: 'elonmusk',
+                        status: 'APPROVED'
+                    }
+                ]
                 }
               },
             });

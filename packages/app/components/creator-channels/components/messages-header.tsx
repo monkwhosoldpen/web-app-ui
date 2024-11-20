@@ -154,10 +154,10 @@ function ProfileDropdown({ user, tw = "", propsFromMessages }: any) {
           onSelect={async () => {
             router.push(
               {
-                pathname: Platform.OS === "web" ? router.pathname : "/report",
+                pathname: Platform.OS === "web" ? router.pathname : "/profile/onboarding-fan",
                 query: {
                   ...router.query,
-                  reportModal: true,
+                  onboardingFanModal: true,
                   userId: user.profile_id,
                 },
               },
