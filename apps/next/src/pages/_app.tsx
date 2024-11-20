@@ -21,6 +21,7 @@ import { CreatorTokensExplanationScreen } from "app/screens/creator-tokens-expla
 
 import { LoginScreen } from "app/screens/login";
 import { OnboardingScreen } from "app/screens/onboarding";
+import { OnboardingFanScreen } from "app/screens/onboarding-fan";
 
 import { ReportScreen } from "app/screens/report";
 import { ManifestoScreen } from "app/screens/manifesto";
@@ -187,6 +188,7 @@ function App({ Component, pageProps, router }: AppProps) {
 
         <CreatorChannelsSettingsScreen />
         <OnboardingScreen />
+        <OnboardingFanScreen />
         {/* Login should be the last so it renders on top of others if needed */}
         <LoginScreen />
         <Toaster />
