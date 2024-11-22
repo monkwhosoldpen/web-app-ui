@@ -50,6 +50,7 @@ const nextConfig = {
     "expo-asset",
     "expo-blur",
     "expo-clipboard",
+    "pouchdb",
     "expo-constants",
     "expo-linking",
     "expo-dev-client",
