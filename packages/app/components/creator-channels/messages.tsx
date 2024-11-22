@@ -755,6 +755,7 @@ export const mockSubgroups: any = [
   { id: "even", name: "Even Messages", memberCount: 0 },
 ];
 
+import * as PouchDB from 'pouchdb';
 
 // const db = new PouchDB('messages', {
 //   adapter: typeof window === 'undefined' ? 'asyncstorage' : 'idb',
