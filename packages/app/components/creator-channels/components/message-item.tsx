@@ -7,7 +7,6 @@ import Animated, {
   SharedValue,
 } from "react-native-reanimated";
 
-import { Avatar } from "@showtime-xyz/universal.avatar";
 import { useIsDarkMode } from "@showtime-xyz/universal.hooks";
 import { Flag } from "@showtime-xyz/universal.icon";
 import { MoreHorizontal } from "@showtime-xyz/universal.icon";
@@ -42,9 +41,12 @@ import { TwitterBadge } from "./twitter-badge";
 import { useTranslation } from "react-i18next";
 
 import { useEffect, useState } from 'react';
-import { ZulipBadge } from "./zulip-badge";
+
 import { Text } from "@showtime-xyz/universal.text";
+import { AvatarHoverCard } from "app/components/card/avatar-hover-card";
+import { ClampText } from "@showtime-xyz/universal.clamp-text";
 import { Button } from "@showtime-xyz/universal.button";
+import { BlurView } from "@react-native-community/blur";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -120,10 +122,11 @@ export const MessageItem = memo(
     };
 
     const style = useAnimatedStyle(() => {
-      if (editMessageIdSharedValue?.value === channel_message?.id) {
+      if (true) {
         return {
           backgroundColor: isDark ? colors.gray[800] : colors.gray[100],
           borderRadius: 8,
+          border: `1px solid ${isDark ? colors.gray[700] : colors.gray[200]}`
         };
       }
       return {
@@ -156,7 +159,7 @@ export const MessageItem = memo(
         ? linkifyDescription(
           limitLineBreaks(
             cleanUserTextInput(removeTags(content)),
-            10
+            2
           ),
           "!text-indigo-600 dark:!text-blue-400"
         )
@@ -169,23 +172,11 @@ export const MessageItem = memo(
 
     // Add debug logging
     useEffect(() => {
-      console.log('MessageItem Props:', {
-        statusUser,
-        isPremium,
-        messageId: item.channel_message?.id,
-        username: item.channel_message?.sent_by?.profile?.username
-      });
     }, [statusUser, isPremium, item]);
 
     // Add a function to determine if message should be blurred
     const shouldBlurMessage = () => {
       const shouldBlur = isPremium && statusUser !== 'APPROVED';
-      console.log('🎭 Blur Check:', {
-        messageId: item.channel_message?.id,
-        isPremium,
-        statusUser,
-        shouldBlur,
-      });
       return shouldBlur;
     };
 
@@ -194,34 +185,15 @@ export const MessageItem = memo(
 
     // Log when component mounts/updates with key props
     useEffect(() => {
-      console.log('🔄 MessageItem Render:', {
-        messageId: item.channel_message?.id,
-        isPremium,
-        statusUser,
-        username: item.channel_message?.sent_by?.profile?.username,
-        hasAttachments: item.channel_message?.attachments?.length > 0,
-      });
     }, [item, isPremium, statusUser]);
 
     // Log blur state changes
     useEffect(() => {
       const isBlurred = shouldBlurMessage();
-      console.log('🔒 Message Visibility:', {
-        messageId: item.channel_message?.id,
-        isPremium,
-        statusUser,
-        isBlurred,
-        messageLength: item.channel_message?.body_text_length,
-      });
     }, [isPremium, statusUser, item.channel_message?.id, item.channel_message?.body_text_length]);
 
     // Log when onboard button is pressed
     const handleOnboardPress = () => {
-      console.log('👆 Onboard Button Pressed:', {
-        messageId: item.channel_message?.id,
-        statusUser,
-        isPremium,
-      });
       if (handleOnboard) {
         handleOnboard();
       } else {
@@ -231,68 +203,73 @@ export const MessageItem = memo(
 
     // Log translated content processing
     useEffect(() => {
-      console.log('🌐 Content Translation:', {
-        messageId: item.channel_message?.id,
-        hasTranslatedContent: !!item.translated_content,
-        selectedLanguage,
-        originalLength: item.channel_message?.body?.length,
-        processedLength: messageContent?.length,
-      });
     }, [
-      selectedLanguage, 
+      selectedLanguage,
       item.channel_message?.id,
       item.channel_message?.body?.length,
       item.translated_content,
       messageContent
     ]);
 
+    const blurStyles = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderRadius: 8,
+      overflow: 'hidden',
+    } as const;
+
     return (
       <>
         <AnimatedView tw="my-2 px-3" style={style} ref={animatedViewRef}>
-          <LeanView tw="flex-row" style={{ columnGap: 8 }}>
-            <Link
-              href={`/@${item.channel_message?.sent_by?.profile?.username}`}
-            >
-              <LeanView tw="h-6 w-6">
-                <Avatar
-                  size={24}
+          <View tw="mb-2 mt-2 px-2 md:px-0">
+
+            <LeanView tw="flex-row items-center py-2">
+              <View tw="mt-0">
+                <AvatarHoverCard
+                  tw="rounded-2xl"
+                  username="johndoe"
                   url={image_url}
+                  size={40}
                 />
-                <View tw="absolute h-full w-full rounded-full border-[1.4px] border-white/60 dark:border-black/60" />
-              </LeanView>
-            </Link>
-            <LeanView tw="flex-1" style={{ rowGap: 8 }}>
-              <LeanView tw="flex-row items-center" style={{ columnGap: 8 }}>
+              </View>
+              <View tw="ml-2 justify-center">
                 <Link
                   href={`/@${item.channel_message?.sent_by?.profile?.username
                     }`}
+
+                  tw="flex-row items-center"
                 >
-                  <LeanText
+                  {/* <LeanText
                     tw={"text-sm font-bold text-gray-900 dark:text-gray-100"}
                   >
                     {item.channel_message?.sent_by?.profile?.username}
-                  </LeanText>
+                  </LeanText> */}
+                  <LeanView tw="flex-row items-center">
+                    <LeanText
+                      tw="text-sm font-bold text-gray-900 dark:text-gray-100"
+                    >
+                      {item.channel_message?.sent_by?.profile?.username}
+                    </LeanText>
+                    {true ? (
+                      <View tw="ml-2">
+                        <TwitterBadge />
+                      </View>
+                    ) : null}
+                  </LeanView>
+
                 </Link>
 
-                <LeanView tw="flex-row items-center">
-                  <LeanText tw={"text-xs text-gray-700 dark:text-gray-200"}>
-                    {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
-                  </LeanText>
-                  {isFromZulip ? (
-                    <View tw="ml-2">
-                      <ZulipBadge />
-                    </View>
-                  ) : null}
-
-                  {isFromTwitter ? (
-                    <View tw="ml-2">
-                      <TwitterBadge />
-                    </View>
-                  ) : null}
-                </LeanView>
-
+                <View tw="h-2" />
+                <Text tw="text-xs text-gray-600 dark:text-gray-400">
+                  {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
+                </Text>
+              </View>
+              <View tw="ml-auto flex-row items-center">
                 <LeanView
-                  tw="mr-2 flex-1 flex-row items-center justify-end"
+                  tw="mr-0 flex-1 flex-row items-center justify-end"
                   style={{
                     gap: 12,
                   }}
@@ -307,7 +284,7 @@ export const MessageItem = memo(
                       })}
                     >
                       <MoreHorizontal
-                        color={isDark ? colors.gray[400] : colors.gray[700]}
+                        color={isDark ? colors.gray[100] : colors.gray[900]}
                         width={20}
                         height={20}
                       />
@@ -315,8 +292,7 @@ export const MessageItem = memo(
 
                     <DropdownMenuContent loop sideOffset={8}>
 
-                      {item.channel_message?.sent_by?.profile?.profile_id !==
-                        user?.user?.data.profile?.profile_id ? (
+                      {true ? (
                         <DropdownMenuItem
                           onSelect={() => {
                             router.push(
@@ -342,7 +318,7 @@ export const MessageItem = memo(
                               name: "flag",
                             }}
                           />
-                          <DropdownMenuItemTitle tw="font-semibold text-gray-700 dark:text-gray-400">
+                          <DropdownMenuItemTitle tw="text-gray-700 dark:text-gray-300">
                             Report
                           </DropdownMenuItemTitle>
                         </DropdownMenuItem>
@@ -350,47 +326,53 @@ export const MessageItem = memo(
                     </DropdownMenuContent>
                   </DropdownMenuRoot>
                 </LeanView>
-              </LeanView>
-
-              {item.channel_message?.body_text_length > 0 ? (
-                <LeanText
-                  tw={"text-sm text-gray-900 dark:text-gray-100"}
-                  style={
-                    Platform.OS === "web"
-                      ? {
-                        // @ts-ignore
-                        wordBreak: "break-word",
-                      }
-                      : {}
-                  }
-                >
-                  {messageContent}
-                </LeanText>
-              ) : null}
-
-              {item.channel_message?.attachments?.length > 0 &&
-                item.channel_message?.attachments[0].mime.includes("image") ? (
-                <ImagePreview
-                  attachment={item.channel_message?.attachments[0]}
-                  isViewable={permissions?.can_view_creator_messages}
-                />
-              ) : null}
-
+              </View>
             </LeanView>
 
-            {isPremium && statusUser !== 'APPROVED' && (
-              <LeanView tw="absolute inset-0 items-center justify-center bg-black/5">
-                <Button
-                  onPress={handleOnboardPress}
-                  variant="primary"
-                  size="small"
-                  labelTW="font-semibold"
-                >
-                  Unlock Premium Content
-                </Button>
-              </LeanView>
-            )}
-          </LeanView>
+            <View
+              tw="my-2 mb-4"
+              style={{ position: 'relative' }}
+            >
+              <View style={isPremium && statusUser !== 'APPROVED' ? { filter: 'blur(8px)' } : {}}>
+                <Text tw="text-15 font-bold text-gray-900 dark:text-white">
+                  {"Amazing NFT"}
+                </Text>
+
+                <View tw="h-3" />
+
+                <View tw="mt-2 items-baseline">
+                  <ClampText
+                    text={messageContent}
+                    maxLines={3}
+                    tw="text-sm text-gray-900 dark:text-gray-100"
+                  />
+                </View>
+
+                {item.channel_message?.attachments?.length > 0 &&
+                  item.channel_message?.attachments[0].mime.includes("image") ? (
+                  <ImagePreview
+                    attachment={item.channel_message?.attachments[0]}
+                    isViewable={permissions?.can_view_creator_messages}
+                  />
+                ) : null}
+              </View>
+
+              {isPremium && statusUser !== 'APPROVED' && (
+                <View tw="absolute inset-0 bg-gray-100/10 dark:bg-gray-900/10 backdrop-blur-md">
+                  <View tw="absolute inset-0 items-center justify-center">
+                    <Button
+                      onPress={handleOnboardPress}
+                      variant="primary"
+                      size="small"
+                      labelTW="font-semibold"
+                    >
+                      Unlock Premium Content
+                    </Button>
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
         </AnimatedView>
       </>
     );
@@ -398,8 +380,8 @@ export const MessageItem = memo(
   // Update comparison function to include relevant props
   (prevProps, nextProps) => {
     return prevProps.statusUser === nextProps.statusUser &&
-           prevProps.isPremium === nextProps.isPremium &&
-           prevProps.item.channel_message?.id === nextProps.item.channel_message?.id;
+      prevProps.isPremium === nextProps.isPremium &&
+      prevProps.item.channel_message?.id === nextProps.item.channel_message?.id;
   }
 );
 

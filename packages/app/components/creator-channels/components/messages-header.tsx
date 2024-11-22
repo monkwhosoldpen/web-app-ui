@@ -38,7 +38,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "design-system/dropdown-menu";
-import { View as LeanView } from "@showtime-xyz/universal.view";
+import { View as LeanView, View } from "@showtime-xyz/universal.view";
 
 export const MessagesHeader = (props: HeaderProps) => {
   const router = useRouter();
@@ -54,7 +54,11 @@ export const MessagesHeader = (props: HeaderProps) => {
 
   return (
     <LeanView
-      tw="web:pt-2 web:md:py-5 android:pt-4 flex-row items-center border-gray-200 px-2.5 pb-2 dark:border-gray-800 md:border-b"
+      tw={[
+        "web:pt-2 web:md:py-5 android:pt-4 flex-row items-center border-gray-200 px-2.5 pb-2 dark:border-gray-800 md:border-b",
+        // "bg-gray-200 dark:bg-gray-800",
+        "web:pt-2 web:md:py-5 android:pt-4 flex-row items-center border-gray-200 px-2.5 pb-2 dark:border-gray-800 md:border-b"
+      ]}
       style={{ columnGap: 8 }}
     >
       <LeanView tw="flex-row items-center" style={{ columnGap: 10 }}>
@@ -72,12 +76,14 @@ export const MessagesHeader = (props: HeaderProps) => {
           />
         </Pressable>
         <LeanView>
-          <AvatarHoverCard
-            username={props.username}
-            url={image_url}
-            size={34}
-            alt="Channels Avatar"
-          />
+          <View tw="pl-4">
+            <AvatarHoverCard
+              username={props.username}
+              url={image_url}
+              size={34}
+              alt="Channels Avatar"
+            />
+          </View>
         </LeanView>
       </LeanView>
       {props.channelId ? (

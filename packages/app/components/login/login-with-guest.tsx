@@ -34,12 +34,7 @@ export const LoginWithGuest = () => {
               options: {
                 data: {
                   captcha_completed_at: null,
-                  channels: [
-                    {
-                        channelId: 'elonmusk',
-                        status: 'APPROVED'
-                    }
-                ]
+                  channels: []
                 }
               },
             });
@@ -59,9 +54,9 @@ export const LoginWithGuest = () => {
 
           // setWeb3({ ...client, isMagic: true });
           // when profile is incomplete, login will automatically redirect user to /profile/edit. So we don't need to redirect user to decodedURI
-          if (!isProfileIncomplete(user.data.profile)) {
-            router.pop();
-          }
+          // if (!isProfileIncomplete(user.data.profile)) {
+          //   router.pop();
+          // }
         } catch (e) {
           Logger.error(e);
           logout();

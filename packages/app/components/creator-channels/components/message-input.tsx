@@ -49,7 +49,6 @@ export const MessageBoxUnavailable = ({ channelId, channelOwnerProfile }: any) =
   const [statusUser, setStatusUser] = useState<any>(null);
 
   useEffect(() => {
-    console.log(myInfoData);
     const statusUser_ = myInfoData
       ? myInfoData?.data?.profile?.is_anonymous
         ? "Anonymous"

@@ -56,11 +56,11 @@ const version = packageJSON.version;
 const majorVersion = semver.major(version);
 
 const expoConfig: ExpoConfig = {
-  name: "netaconnect",
-  description: "The n verse",
-  slug: "nconnect",
+  name: "fixdai",
+  description: "The fixd verse",
+  slug: "fixdai",
   scheme: config.scheme,
-  owner: "nconnect",
+  owner: "monkwhosoldpen",
   icon: config.icon,
   version: version.toString(),
   userInterfaceStyle: "automatic",
@@ -134,7 +134,7 @@ const expoConfig: ExpoConfig = {
   orientation: "portrait",
   updates: {
     fallbackToCacheTimeout: 0,
-    url: "https://u.expo.dev/9acd4151-02b4-429b-bec6-79ee16d70314",
+    url: "https://u.expo.dev/f616566b-c556-4e73-892d-3a75e9e3ee3a",
   },
   // We use the major version for the runtime version so it's in sync
   // with the native app version and should prevent us from sending an update
@@ -144,7 +144,7 @@ const expoConfig: ExpoConfig = {
   extra: {
     STAGE: STAGE,
     eas: {
-      projectId: "9acd4151-02b4-429b-bec6-79ee16d70314",
+      projectId: "f616566b-c556-4e73-892d-3a75e9e3ee3a",
     },
   },
   plugins: [

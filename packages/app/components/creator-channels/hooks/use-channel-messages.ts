@@ -56,23 +56,26 @@ export const getChannelMessageKey = (channelId: string | number) => {
   return `/v1/channels/${channelId}/messages`;
 };
 
-export const useChannelMessages = (channelId?: string | number) => {
+export const useChannelMessages = (channelId?: string | number, subgroup_username: any = '') => {
   const { i18n } = useTranslation();
   const selectedLanguage = i18n.language;
   const language = '' || selectedLanguage;
   let indexRef = useRef(0);
+
   const messagesUrl = useCallback(
     (index: number, previousPageData: []) => {
       if (previousPageData && !previousPageData.length) return null;
       indexRef.current = index;
       if (channelId) {
-        return `${getChannelMessageKey(channelId)}?page=${index + 1
-          }&limit=${PAGE_SIZE}&language=${language}`;
+        const baseUrl = `${getChannelMessageKey(channelId)}?page=${index + 1}&limit=${PAGE_SIZE}&language=${language}`;
+        return subgroup_username && subgroup_username !== 'main'
+          ? `${baseUrl}&subgroup_username=${subgroup_username}`
+          : baseUrl;
       } else {
         return null;
       }
     },
-    [channelId]
+    [channelId, subgroup_username, language]
   );
 
   const queryState = useInfiniteListQuerySWR<ChannelMessageResponse>(

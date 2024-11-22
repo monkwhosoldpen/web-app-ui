@@ -25,13 +25,16 @@ export const OnboardingFan = ({ channelId }: { channelId: string }) => {
     // if (user?.data?.profile?.username?.startsWith("projectx")) {
     //   return OnboardingStep.Username;
     // }
+    console.log(user?.data?.profile?.role);
+    debugger;
+    const isAuthenticated = user?.data?.profile?.role === 'authenticated';
+    console.log(isAuthenticated);
 
-    if (!user?.data?.profile?.location_code) {
+    if (!isAuthenticated) {
       return OnboardingStep.Preferences;
     }
-
-    if (user?.data?.profile?.location_code) {
-      return OnboardingStep.Social;
+    if (isAuthenticated) {
+      return OnboardingStep.Preferences;
     }
 
     // if (user?.data?.profile.username) {
@@ -45,8 +48,6 @@ export const OnboardingFan = ({ channelId }: { channelId: string }) => {
     // if (user?.data?.profile.img_url) {
     //   return OnboardingStep.Social;
     // }
-
-
     return OnboardingStep.Preferences;
   }, [user]);
   const [step, setStep] = useState<OnboardingStep>(initialStep);
@@ -61,7 +62,7 @@ export const OnboardingFan = ({ channelId }: { channelId: string }) => {
               <SelectUsername key="username" />
             )}
             {step === OnboardingStep.Picture && <SelectPicture key="picture" />} */}
-            {step === OnboardingStep.Preferences && <SelectPreferences  key="preferences" />}
+            {step === OnboardingStep.Preferences && <SelectPreferences key="preferences" />}
             {step === OnboardingStep.Social && <SelectSocial key="social" channelId={channelId} />}
           </AnimatePresence>
         </View>

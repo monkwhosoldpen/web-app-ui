@@ -6,6 +6,7 @@ import { styled } from "nativewind";
 
 import { Showtime } from "@showtime-xyz/universal.icon";
 import { useIsDarkMode } from "@showtime-xyz/universal.hooks";
+import { HotTabBarIconTemp } from "app/navigation/tab-bar-icons";
 
 type SubGroupsSidebarProps = {
     subgroups: Array<{
@@ -13,7 +14,7 @@ type SubGroupsSidebarProps = {
         username: string;
         memberCount: number;
     }>;
-    onSelectSubgroup: (id: string) => void;
+    onSelectSubgroup: (payload: any) => void;
     activeSubgroupId: string;
 };
 
@@ -37,7 +38,7 @@ export const SubGroupsSidebar = ({
     // Create main group that will always be first
     const mainGroup = {
         subgroup_id: "main",
-        username: "Main",
+        username: "main",
         memberCount: subgroups[0]?.memberCount || 0
     };
 
@@ -48,7 +49,7 @@ export const SubGroupsSidebar = ({
         <View
             tw="border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-black"
             style={{
-                width: 50,
+                width: 60,
                 position: 'absolute',
                 top: 0,
                 left: 0,
@@ -66,7 +67,7 @@ export const SubGroupsSidebar = ({
                 {allGroups.map((subgroup, index) => (
                     <PressableHover
                         key={index}
-                        onPress={() => onSelectSubgroup(subgroup.subgroup_id)}
+                        onPress={() => onSelectSubgroup(subgroup)}
                         tw="border-b border-gray-100 dark:border-gray-900"
                     >
                         <View

@@ -184,26 +184,16 @@ export const Messages = memo(() => {
   const [activeSubgroupId, setActiveSubgroupId] = useState("main");
 
   const channelDetail = useChannelById(channelId);
-  const { data, isLoading, fetchMore, refresh, isLoadingMore, error, refetch } = useChannelMessages(channelId);
+  const { data, isLoading, fetchMore, refresh, isLoadingMore, error, refetch } = useChannelMessages(channelId, activeSubgroupId);
 
   useEffect(() => {
     if (slug) {
-      console.log('🔄 Refresh triggered by new notification:', {
-        slug,
-        channelId,
-        currentDataLength: data?.length
-      });
       refresh();
     }
   }, [slug, refresh]);
 
   useEffect(() => {
     if (activeSubgroupId) {
-      console.log('🔄 Refetch triggered by subgroup change:', {
-        activeSubgroupId,
-        channelId,
-        currentDataLength: data?.length
-      });
       refetch({ activeSubgroupId });
     }
   }, [activeSubgroupId, refetch]);
@@ -223,7 +213,7 @@ export const Messages = memo(() => {
       return;
     }
     const channels = myInfoData.data.profile.user_metadata.channels;
-    const channelStatus = channels.find((channel: any) => 
+    const channelStatus = channels.find((channel: any) =>
       channel.channelId === channelId
     )?.status;
     const newStatus = channelStatus || 'NOT_FOUND';
@@ -580,7 +570,7 @@ export const Messages = memo(() => {
   const [name, setName] = useState<any>('');
   const [location, setLocation] = useState<any>('');
   const [bio, setBio] = useState<any>('');
-  
+
   const [subgroups, setSubgroups] = useState<any>([]);
 
   const { onToggleFollow } = useFollow({
@@ -613,6 +603,10 @@ export const Messages = memo(() => {
   // Add logging to track data changes
   useEffect(() => {
   }, [data, isLoading, isLoadingMore, error]);
+
+  const onSelectSubgroup = (payload: any) => {
+    setActiveSubgroupId(payload.subgroup_id);
+  }
 
   return (
     <>
@@ -665,17 +659,17 @@ export const Messages = memo(() => {
             {isPremium && (
               <SubGroupsSidebar
                 subgroups={subgroups || mockSubgroups}
-                onSelectSubgroup={setActiveSubgroupId}
+                onSelectSubgroup={onSelectSubgroup}
                 activeSubgroupId={activeSubgroupId}
               />
             )}
-            
+
             <AnimatedView
               tw={[
-                "flex-1 overflow-hidden",
+                "flex-1 overflow-hidden px-3",
                 showCollectToUnlock ? "pb-2" : "",
               ]}
-              style={isPremium ? { marginLeft: 50 } : undefined}
+              style={isPremium ? { marginLeft: 60 } : undefined}
             >
               {isLoading || channelDetail.isLoading ? (
                 <MessageSkeleton />
