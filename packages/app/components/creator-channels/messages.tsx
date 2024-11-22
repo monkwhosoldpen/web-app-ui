@@ -23,10 +23,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSWRConfig } from "swr";
 
-import { createContext } from 'react';
-import PouchDB from 'pouchdb';
-import * as Notifications from 'expo-notifications';
-import { supabase } from 'app/providers/utils/supabaseClient';
+// import { createContext } from 'react';
+// import PouchDB from 'pouchdb';
+// import * as Notifications from 'expo-notifications';
+// import { supabase } from 'app/providers/utils/supabaseClient';
 
 import { Button } from "@showtime-xyz/universal.button";
 import { useIsDarkMode } from "@showtime-xyz/universal.hooks";
@@ -757,154 +757,154 @@ export const mockSubgroups: any = [
 ];
 
 
-const db = new PouchDB('messages', {
-  adapter: typeof window === 'undefined' ? 'asyncstorage' : 'idb',
-});
+// const db = new PouchDB('messages', {
+//   adapter: typeof window === 'undefined' ? 'asyncstorage' : 'idb',
+// });
 
-// Context to hold messages and provide actions
-const LiveChatContext = createContext(null);
+// // Context to hold messages and provide actions
+// const LiveChatContext = createContext(null);
 
-const LiveChatProvider = ({ children, username }) => {
-  const [messages, setMessages] = useState([]);
+// const LiveChatProvider = ({ children, username }) => {
+//   const [messages, setMessages] = useState([]);
 
-  // Fetch messages from Supabase
-  const fetchMessages = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('live_messages')
-        .select('*')
-        .eq('username', username)
-        .order('created_at', { ascending: true });
+//   // Fetch messages from Supabase
+//   const fetchMessages = async () => {
+//     try {
+//       const { data, error } = await supabase
+//         .from('live_messages')
+//         .select('*')
+//         .eq('username', username)
+//         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+//       if (error) throw error;
 
-      setMessages(data);
+//       setMessages(data);
 
-      // Sync to offline cache
-      await db.bulkDocs(
-        data.map((msg) => ({ ...msg, _id: msg.id })) // Use _id for PouchDB
-      );
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
+//       // Sync to offline cache
+//       await db.bulkDocs(
+//         data.map((msg) => ({ ...msg, _id: msg.id })) // Use _id for PouchDB
+//       );
+//     } catch (error) {
+//       console.error('Error fetching messages:', error);
+//     }
+//   };
 
-  // Fetch cached messages from PouchDB
-  const fetchCachedMessages = async () => {
-    try {
-      const result = await db.allDocs({ include_docs: true });
-      const cachedMessages = result.rows.map((row) => row.doc);
-      setMessages(cachedMessages);
-    } catch (error) {
-      console.error('Error fetching cached messages:', error);
-    }
-  };
+//   // Fetch cached messages from PouchDB
+//   const fetchCachedMessages = async () => {
+//     try {
+//       const result = await db.allDocs({ include_docs: true });
+//       const cachedMessages = result.rows.map((row) => row.doc);
+//       setMessages(cachedMessages);
+//     } catch (error) {
+//       console.error('Error fetching cached messages:', error);
+//     }
+//   };
 
-  // Handle new message notification
-  const handleNewMessageNotification = async (message) => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'New Message',
-        body: `${message.username}: ${message.content}`,
-      },
-      trigger: null,
-    });
-  };
+//   // Handle new message notification
+//   const handleNewMessageNotification = async (message) => {
+//     await Notifications.scheduleNotificationAsync({
+//       content: {
+//         title: 'New Message',
+//         body: `${message.username}: ${message.content}`,
+//       },
+//       trigger: null,
+//     });
+//   };
 
-  // Real-time subscription
-  useEffect(() => {
-    const subscription = supabase
-      .channel('public:live_messages')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'live_messages',
-          filter: `username=eq.${username}`,
-        },
-        (payload) => {
-          const newMessage = payload.new;
-          setMessages((prev) => [...prev, newMessage]);
+//   // Real-time subscription
+//   useEffect(() => {
+//     const subscription = supabase
+//       .channel('public:live_messages')
+//       .on(
+//         'postgres_changes',
+//         {
+//           event: 'INSERT',
+//           schema: 'public',
+//           table: 'live_messages',
+//           filter: `username=eq.${username}`,
+//         },
+//         (payload) => {
+//           const newMessage = payload.new;
+//           setMessages((prev) => [...prev, newMessage]);
 
-          // Sync to cache
-          db.put({ ...newMessage, _id: newMessage.id }).catch(() => { });
+//           // Sync to cache
+//           db.put({ ...newMessage, _id: newMessage.id }).catch(() => { });
 
-          // Trigger notification
-          handleNewMessageNotification(newMessage);
-        }
-      )
-      .subscribe();
+//           // Trigger notification
+//           handleNewMessageNotification(newMessage);
+//         }
+//       )
+//       .subscribe();
 
-    return () => {
-      supabase.removeChannel(subscription);
-    };
-  }, [username]);
+//     return () => {
+//       supabase.removeChannel(subscription);
+//     };
+//   }, [username]);
 
-  // Fetch cached and online messages on mount
-  useEffect(() => {
-    fetchCachedMessages();
-    fetchMessages();
-  }, []);
+//   // Fetch cached and online messages on mount
+//   useEffect(() => {
+//     fetchCachedMessages();
+//     fetchMessages();
+//   }, []);
 
-  return (
-    <LiveChatContext.Provider value={{ messages }}>
-      {children}
-    </LiveChatContext.Provider>
-  );
-};
+//   return (
+//     <LiveChatContext.Provider value={{ messages }}>
+//       {children}
+//     </LiveChatContext.Provider>
+//   );
+// };
 
-// Custom hook for consuming LiveChat context
-const useLiveChat = () => {
-  const context = useContext(LiveChatContext);
-  if (!context) {
-    throw new Error('useLiveChat must be used within a LiveChatProvider');
-  }
-  return context;
-};
+// // Custom hook for consuming LiveChat context
+// const useLiveChat = () => {
+//   const context = useContext(LiveChatContext);
+//   if (!context) {
+//     throw new Error('useLiveChat must be used within a LiveChatProvider');
+//   }
+//   return context;
+// };
 
 
-const LiveChatSub = ({ username }) => {
-  const { messages } = useLiveChat();
+// const LiveChatSub = ({ username }) => {
+//   const { messages } = useLiveChat();
 
-  return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white border border-gray-300 shadow-md rounded-lg p-4">
-        <div className="h-64 overflow-y-auto mb-4 bg-gray-50 rounded-lg p-2">
-          {messages.length === 0 ? (
-            <p className="text-gray-500 text-center">No messages yet from {username}.</p>
-          ) : (
-            messages.map((message) => (
-              <div key={message.id} className="mb-2">
-                <strong className="text-blue-600">{message.username}</strong>:{' '}
-                <span className="text-gray-700">{message.content}</span>
-              </div>
-            ))
-          )}
-        </div>
-        <div className="flex">
-          <input
-            type="text"
-            disabled
-            placeholder="Type your message... (Disabled in demo)"
-            className="border border-gray-300 rounded-l-lg flex-1 p-2 bg-gray-200 text-gray-500 cursor-not-allowed"
-          />
-          <button
-            disabled
-            className="ml-2 p-2 bg-blue-500 text-white rounded-r-lg cursor-not-allowed opacity-50"
-          >
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+//       <div className="w-full max-w-md bg-white border border-gray-300 shadow-md rounded-lg p-4">
+//         <div className="h-64 overflow-y-auto mb-4 bg-gray-50 rounded-lg p-2">
+//           {messages.length === 0 ? (
+//             <p className="text-gray-500 text-center">No messages yet from {username}.</p>
+//           ) : (
+//             messages.map((message) => (
+//               <div key={message.id} className="mb-2">
+//                 <strong className="text-blue-600">{message.username}</strong>:{' '}
+//                 <span className="text-gray-700">{message.content}</span>
+//               </div>
+//             ))
+//           )}
+//         </div>
+//         <div className="flex">
+//           <input
+//             type="text"
+//             disabled
+//             placeholder="Type your message... (Disabled in demo)"
+//             className="border border-gray-300 rounded-l-lg flex-1 p-2 bg-gray-200 text-gray-500 cursor-not-allowed"
+//           />
+//           <button
+//             disabled
+//             className="ml-2 p-2 bg-blue-500 text-white rounded-r-lg cursor-not-allowed opacity-50"
+//           >
+//             Send
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
-const LiveChat = () => {
-  return (
-    <LiveChatProvider username="elonmusk">
-      <LiveChatSub username="elonmusk" />
-    </LiveChatProvider>
-  );
-};
+// const LiveChat = () => {
+//   return (
+//     <LiveChatProvider username="elonmusk">
+//       <LiveChatSub username="elonmusk" />
+//     </LiveChatProvider>
+//   );
+// };
