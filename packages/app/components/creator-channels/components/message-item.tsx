@@ -123,7 +123,7 @@ export const MessageItem = memo(
       if (true) {
         return {
           backgroundColor: isDark ? colors.gray[800] : colors.gray[100],
-          borderRadius: 8,
+          // borderRadius: 8,
           border: `1px solid ${isDark ? colors.gray[700] : colors.gray[200]}`
         };
       }
@@ -199,19 +199,9 @@ export const MessageItem = memo(
       }
     };
 
-    // Log translated content processing
-    useEffect(() => {
-    }, [
-      selectedLanguage,
-      item.channel_message?.id,
-      item.channel_message?.body?.length,
-      item.translated_content,
-      messageContent
-    ]);
-
     return (
       <>
-        <AnimatedView tw="my-2 px-3" style={style} ref={animatedViewRef}>
+        <AnimatedView tw="my-2 px-0" style={style} ref={animatedViewRef}>
           <LeanView tw="flex-row" style={{ columnGap: 8 }}>
             <Link
               href={`/@${item.channel_message?.sent_by?.profile?.username}`}
@@ -219,116 +209,119 @@ export const MessageItem = memo(
               <LeanView tw="h-6 w-6">
                 <Avatar
                   size={24}
-                  url={image_url}
+                  url={'https://placehold.co/40x40/color/red'}
                 />
                 <View tw="absolute h-full w-full rounded-full border-[1.4px] border-white/60 dark:border-black/60" />
               </LeanView>
             </Link>
             <LeanView tw="flex-1" style={{ rowGap: 8 }}>
-              <LeanView tw="flex-row items-center" style={{ columnGap: 8 }}>
-                <Link
-                  href={`/@${item.channel_message?.sent_by?.profile?.username
-                    }`}
-                >
-                  <LeanText
-                    tw={"text-sm font-bold text-gray-900 dark:text-gray-100"}
+              <LeanView
+                tw=" p-0"
+              >
+                <LeanView tw="flex-row items-center py-0 mb-2" style={{ columnGap: 8 }}>
+                  <Link
+                    href={`/@${item.channel_message?.sent_by?.profile?.username}`}
                   >
-                    {item.channel_message?.sent_by?.profile?.username}
-                  </LeanText>
-                </Link>
-
-                <LeanView tw="flex-row items-center">
-                  <LeanText tw={"text-xs text-gray-700 dark:text-gray-200"}>
-                    {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
-                  </LeanText>
-                  {true ? (
-                    <View tw="ml-2">
-                      <ZulipBadge />
-                    </View>
-                  ) : null}
-
-                  {/* {true ? (
-                    <View tw="ml-2">
-                      <TwitterBadge />
-                    </View>
-                  ) : null} */}
-                </LeanView>
-
-                <LeanView
-                  tw="mr-2 flex-1 flex-row items-center justify-end"
-                  style={{
-                    gap: 12,
-                  }}
-                >
-                  <DropdownMenuRoot>
-                    <DropdownMenuTrigger
-                      // @ts-expect-error - RNW
-                      style={Platform.select({
-                        web: {
-                          cursor: "pointer",
-                        },
-                      })}
+                    <LeanText
+                      tw={"text-sm font-bold text-gray-900 dark:text-gray-100"}
                     >
-                      <MoreHorizontal
-                        color={isDark ? colors.gray[400] : colors.gray[700]}
-                        width={20}
-                        height={20}
-                      />
-                    </DropdownMenuTrigger>
+                      {item.channel_message?.sent_by?.profile?.username}
+                    </LeanText>
+                  </Link>
 
-                    <DropdownMenuContent loop sideOffset={8}>
+                  <LeanView tw="flex-row items-center">
+                    <LeanText tw={"text-xs text-gray-700 dark:text-gray-200"}>
+                      {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
+                    </LeanText>
+                    {true ? (
+                      <View tw="ml-2 my-0">
+                        <ZulipBadge />
+                      </View>
+                    ) : null}
 
-                      {true ? (
-                        <DropdownMenuItem
-                          onSelect={() => {
-                            router.push(
-                              {
-                                pathname:
-                                  Platform.OS === "web"
-                                    ? router.pathname
-                                    : "/report",
-                                query: {
-                                  ...router.query,
-                                  reportModal: true,
-                                  channelMessageId: item.channel_message?.id,
+                    {/* {true ? (
+                      <View tw="ml-2">
+                        <TwitterBadge />
+                      </View>
+                    ) : null} */}
+                  </LeanView>
+
+                  <LeanView
+                    tw="mr-2 flex-1 flex-row items-center justify-end"
+                    style={{
+                      gap: 12,
+                    }}
+                  >
+                    <DropdownMenuRoot>
+                      <DropdownMenuTrigger
+                        // @ts-expect-error - RNW
+                        style={Platform.select({
+                          web: {
+                            cursor: "pointer",
+                          },
+                        })}
+                      >
+                        <MoreHorizontal
+                          color={isDark ? colors.gray[400] : colors.gray[700]}
+                          width={20}
+                          height={20}
+                        />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent loop sideOffset={8}>
+
+                        {true ? (
+                          <DropdownMenuItem
+                            onSelect={() => {
+                              router.push(
+                                {
+                                  pathname:
+                                    Platform.OS === "web"
+                                      ? router.pathname
+                                      : "/report",
+                                  query: {
+                                    ...router.query,
+                                    reportModal: true,
+                                    channelMessageId: item.channel_message?.id,
+                                  },
                                 },
-                              },
-                              Platform.OS === "web" ? router.asPath : undefined
-                            );
-                          }}
-                          key="report"
-                        >
-                          <MenuItemIcon
-                            Icon={Flag}
-                            ios={{
-                              name: "flag",
+                                Platform.OS === "web" ? router.asPath : undefined
+                              );
                             }}
-                          />
-                          <DropdownMenuItemTitle tw="font-semibold text-gray-700 dark:text-gray-400">
-                            Report
-                          </DropdownMenuItemTitle>
-                        </DropdownMenuItem>
-                      ) : null}
-                    </DropdownMenuContent>
-                  </DropdownMenuRoot>
+                            key="report"
+                          >
+                            <MenuItemIcon
+                              Icon={Flag}
+                              ios={{
+                                name: "flag",
+                              }}
+                            />
+                            <DropdownMenuItemTitle tw="font-semibold text-gray-700 dark:text-gray-400">
+                              Report
+                            </DropdownMenuItemTitle>
+                          </DropdownMenuItem>
+                        ) : null}
+                      </DropdownMenuContent>
+                    </DropdownMenuRoot>
+                  </LeanView>
                 </LeanView>
-              </LeanView>
 
-              {item.channel_message?.body_text_length > 0 ? (
-                <LeanText
-                  tw={"text-sm text-gray-900 dark:text-gray-100"}
-                  style={
-                    Platform.OS === "web"
-                      ? {
-                        // @ts-ignore
-                        wordBreak: "break-word",
-                      }
-                      : {}
-                  }
-                >
-                  {messageContent}
-                </LeanText>
-              ) : null}
+                {item.channel_message?.body_text_length > 0 ? (
+                  <LeanText
+                    tw={"text-sm text-gray-900 dark:text-gray-100 pb-2"}
+                    style={
+                      Platform.OS === "web"
+                        ? {
+                          // @ts-ignore
+                          wordBreak: "break-word",
+                        }
+                        : {}
+                    }
+                  >
+                    {messageContent}
+                  </LeanText>
+                ) : null}
+              </LeanView>
 
               {item.channel_message?.attachments?.length > 0 &&
                 item.channel_message?.attachments[0].mime.includes("image") ? (
