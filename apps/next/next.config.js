@@ -59,6 +59,7 @@ const nextConfig = {
     "expo-linear-gradient",
     "expo-localization",
     "expo-image-manipulator",
+    "expo-notifications",
     "expo-location",
     "expo-mail-composer",
     "expo-media-library",

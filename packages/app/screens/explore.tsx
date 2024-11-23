@@ -212,7 +212,7 @@ const Profile = ({ username, viewValue }: ProfileScreenProps) => {
                       <TokensTabHeader
                         channelId={username}
                         isSelf={isSelf}
-                        isPremium={is_premium}
+                        isPremiumGoat={is_premium}
                         messageCount={10}
                         isService={is_service}
                         channelPermissions={null}

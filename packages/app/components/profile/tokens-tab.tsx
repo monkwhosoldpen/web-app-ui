@@ -43,7 +43,7 @@ import * as Clipboard from "expo-clipboard";
 
 type TabListProps = {
   profile?: Profile;
-  isPremium: any;
+  isPremiumGoat: any;
   isBlocked?: boolean;
   list: List;
   index: number;
@@ -53,7 +53,7 @@ export type ProfileTabListRef = {
 };
 export const TokensTabHeader = ({
   channelId,
-  isPremium,
+  isPremiumGoat,
   isService,
   isSelf,
   messageCount,
@@ -61,7 +61,7 @@ export const TokensTabHeader = ({
 }: {
   channelId: number | null | undefined | any;
   messageCount?: number | null;
-  isPremium: boolean;
+  isPremiumGoat: boolean;
   isService: boolean;
   isSelf: boolean;
   channelPermissions?: ChannelPermissions | null;
@@ -138,7 +138,7 @@ export const TokensTabHeader = ({
       ) : null}
 
       {
-        (isPremium) && <>
+        (isPremiumGoat) && <>
           <View tw="mb-2 mt-2 rounded-xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-900">
             <View tw="items-center gap-2">
               {
@@ -229,7 +229,7 @@ export const TokensTabHeader = ({
       }
 
       {
-        !isPremium && <>
+        !isPremiumGoat && <>
           <View tw="rounded-xl border border-gray-200 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-900">
             <View tw="items-center gap-2">
 

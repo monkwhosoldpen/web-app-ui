@@ -16,6 +16,7 @@ type SubGroupsSidebarProps = {
     }>;
     onSelectSubgroup: (payload: any) => void;
     activeSubgroupId: string;
+    messageCounts?: { [key: string]: number };
 };
 
 const StyledScrollView = styled(ScrollView);
@@ -31,19 +32,27 @@ export const SubGroupsSidebar = ({
     subgroups,
     onSelectSubgroup,
     activeSubgroupId,
+    messageCounts = {},
 }: SubGroupsSidebarProps) => {
     const insets = useSafeAreaInsets();
     const isDark = useIsDarkMode();
 
     // Create main group that will always be first
-    const mainGroup = {
+    const defaultGroups = [{
         subgroup_id: "main",
         username: "main",
         memberCount: subgroups[0]?.memberCount || 0
-    };
+    },
+    {
+        subgroup_id: "live",
+        username: "Live Chat",
+        memberCount: 0,
+        isLive: true
+    },];
+
 
     // Combine main group with other subgroups
-    const allGroups = [mainGroup, ...subgroups];
+    const allGroups = [...defaultGroups, ...subgroups];
 
     return (
         <View
@@ -86,23 +95,33 @@ export const SubGroupsSidebar = ({
                                         : "opacity-70 hover:opacity-100"
                                 ]}
                             >
-                                <View
-                                    tw={[
-                                        "h-8 w-8 items-center justify-center rounded-full",
-                                        activeSubgroupId === subgroup.subgroup_id
-                                            ? "bg-gray-100 dark:bg-gray-800"
-                                            : ""
-                                    ]}
-                                >
-                                    <Showtime
-                                        style={{
-                                            borderRadius: 6,
-                                            overflow: "hidden"
-                                        }}
-                                        color={isDark ? "#FFF" : "#000"}
-                                        width={20}
-                                        height={20}
-                                    />
+                                <View tw="relative">
+                                    <View
+                                        tw={[
+                                            "h-8 w-8 items-center justify-center rounded-full",
+                                            activeSubgroupId === subgroup.subgroup_id
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : ""
+                                        ]}
+                                    >
+                                        <Showtime
+                                            style={{
+                                                borderRadius: 6,
+                                                overflow: "hidden"
+                                            }}
+                                            color={isDark ? "#FFF" : "#000"}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </View>
+
+                                    {messageCounts[subgroup.subgroup_id] > 0 && (
+                                        <View tw="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-red-500 rounded-full items-center justify-center">
+                                            <Text tw="text-[10px] text-white font-bold">
+                                                {messageCounts[subgroup.subgroup_id]}
+                                            </Text>
+                                        </View>
+                                    )}
                                 </View>
 
                                 <Text
@@ -115,7 +134,7 @@ export const SubGroupsSidebar = ({
                                     ]}
                                     style={{
                                         width: 42,
-                                        height: 22, // Force two lines height
+                                        height: 22,
                                     }}
                                 >
                                     {subgroup.username}

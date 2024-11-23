@@ -104,6 +104,8 @@ export const MessagesHeader = (props: HeaderProps) => {
                 color={isDark ? colors.gray["100"] : colors.gray[500]}
               />
             </Pressable> */}
+            <HeaderRight />
+
             <ProfileDropdown user={props} propsFromMessages={props} />
             <LanguageDropDown />
           </LeanView>
@@ -194,3 +196,42 @@ function ProfileDropdown({ user, tw = "", propsFromMessages }: any) {
     </DropdownMenuRoot>
   );
 }
+
+import { HeaderDropdown } from "app/components/header-dropdown";
+import { useUser } from "app/hooks/use-user";
+import {
+  CreatorChannelsTabBarIcon,
+  TrendingTabBarIcon,
+} from "app/navigation/tab-bar-icons";
+import { useNavigateToLogin } from "app/navigation/use-navigate-to";
+import { NotificationsInHeader } from "app/components/header";
+
+type HeaderRightProps = {
+  withBackground?: boolean;
+};
+
+const HeaderRight = ({ withBackground }: HeaderRightProps) => {
+  const router = useRouter();
+  const { isLoading, isAuthenticated, user } = useUser();
+  const isDark = useIsDarkMode();
+  const navigateToLogin = useNavigateToLogin();
+
+  return (
+    <View>
+      {!isLoading && (
+        <View tw="flex-row items-center px-2">
+          <View tw="flex-row items-center md:mx-2">
+
+            <HeaderDropdown
+              type="profile"
+              withBackground={withBackground}
+              user={user?.data.profile}
+            />
+
+            {/* {Platform.OS === "web" ? <NetworkButton /> : null} */}
+          </View>
+        </View>
+      )}
+    </View>
+  );
+};

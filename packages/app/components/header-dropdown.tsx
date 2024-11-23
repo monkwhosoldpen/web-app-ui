@@ -60,7 +60,7 @@ function HeaderDropdown({
     <DropdownMenuRoot>
       <DropdownMenuTrigger>
         {type === "profile" ? (
-          <View tw="flex h-8 cursor-pointer flex-row items-center justify-center rounded-full bg-gray-100 px-0 dark:bg-gray-900">
+          <View tw="flex h-8 cursor-pointer flex-row items-center justify-center rounded-full px-0 ">
             <Flash
               width={24}
               height={24}

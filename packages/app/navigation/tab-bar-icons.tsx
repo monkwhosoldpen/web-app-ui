@@ -39,6 +39,7 @@ import { useMyInfo } from "app/hooks/api-hooks";
 import { useEffect } from 'react';
 import { useRedirectToSuperMenu } from "app/hooks/use-redirect-to-creator-token-social-share-screen";
 import SvgEye from "design-system/icon/Eye";
+import { useLiveMessages } from "app/providers/live-messages";
 
 // import SvgSmile from "design-system/icon/X";
 
@@ -168,6 +169,24 @@ const CountChannelsIndicator = () => {
   );
 };
 
+const AlertsCountIndicator = () => {
+  const {
+    messageCounts,
+  } = useLiveMessages();
+  const liveCount = messageCounts['live'];
+  return (
+    <>
+      {liveCount > 0 && (
+        <View tw="web:-right-1 absolute right-1 -top-0.5 h-4 w-4 items-center justify-center rounded-full bg-indigo-700">
+          <Text tw="text-[8px] text-white" style={{ lineHeight: 12 }}>
+            {liveCount > 99 ? "99" : liveCount}
+          </Text>
+        </View>
+      )}
+    </>
+  );
+};
+
 export const CreatorChannelsTabBarIcon = ({
   color,
   focused,
@@ -262,11 +281,11 @@ export const NotificationsTabBarIcon = ({
       ) : (
         <Bell style={{ zIndex: 1 }} width={24} height={24} color={color} />
       )}
-      {/* <ErrorBoundary renderFallback={() => <></>}>
+      <ErrorBoundary renderFallback={() => <></>}>
         <Suspense fallback={null}>
-          <UnreadNotificationIndicator />
+          <AlertsCountIndicator />
         </Suspense>
-      </ErrorBoundary> */}
+      </ErrorBoundary>
       <Text style={{ marginVertical: 0, color: color, fontSize: 12 }} tw={`text-xs tracking-widest ${focused ? "text-shadow-md" : ""}`}>
         {t("menu.alerts")}
       </Text>

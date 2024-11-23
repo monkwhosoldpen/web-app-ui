@@ -23,6 +23,7 @@ import { UserProvider } from "app/providers/user-provider";
 import { I18nextProvider } from 'react-i18next';
 import ii18 from './i18-config';
 import { AppStateProvider } from "./app-state-provider";
+import { LiveMessagesProvider } from "./live-messages";
 
 export const AppProviders = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -43,18 +44,20 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
                           <AuthProvider>
                             <AppStateProvider>
                               <UserProvider>
-                                <BottomSheetModalProvider>
-                                  {/* @ts-ignore */}
-                                  <FeedProvider>
-                                    <MuteProvider>
-                                      <>
+                                <LiveMessagesProvider>
+                                  <BottomSheetModalProvider>
+                                    {/* @ts-ignore */}
+                                    <FeedProvider>
+                                      <MuteProvider>
                                         <>
-                                          {children}
+                                          <>
+                                            {children}
+                                          </>
                                         </>
-                                      </>
-                                    </MuteProvider>
-                                  </FeedProvider>
-                                </BottomSheetModalProvider>
+                                      </MuteProvider>
+                                    </FeedProvider>
+                                  </BottomSheetModalProvider>
+                                </LiveMessagesProvider>
                               </UserProvider>
                             </AppStateProvider>
                           </AuthProvider>

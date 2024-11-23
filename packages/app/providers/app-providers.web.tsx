@@ -25,7 +25,7 @@ import { UserProvider } from "app/providers/user-provider";
 import { AppStateProvider } from "./app-state-provider";
 import { I18nextProvider } from 'react-i18next';
 import ii18 from './i18-config';
-import { useChannelsList } from "app/components/creator-channels/hooks/use-channels-list";
+import { LiveMessagesProvider } from "./live-messages";
 
 const AlertProvider = dynamic(() => import("@showtime-xyz/universal.alert"), {
   ssr: false,
@@ -49,20 +49,22 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 
                             <AuthProvider>
                               <UserProvider>
-                                <AppStateProvider>
+                                <LiveMessagesProvider>
+                                  <AppStateProvider>
 
-                                  <BottomSheetModalProvider>
-                                    <FeedProvider>
-                                      <NavigationProvider>
-                                        <MuteProvider>
-                                          <>
-                                            <>{children}</>
-                                          </>
-                                        </MuteProvider>
-                                      </NavigationProvider>
-                                    </FeedProvider>
-                                  </BottomSheetModalProvider>
-                                </AppStateProvider>
+                                    <BottomSheetModalProvider>
+                                      <FeedProvider>
+                                        <NavigationProvider>
+                                          <MuteProvider>
+                                            <>
+                                              <>{children}</>
+                                            </>
+                                          </MuteProvider>
+                                        </NavigationProvider>
+                                      </FeedProvider>
+                                    </BottomSheetModalProvider>
+                                  </AppStateProvider>
+                                </LiveMessagesProvider>
                               </UserProvider>
 
                             </AuthProvider>

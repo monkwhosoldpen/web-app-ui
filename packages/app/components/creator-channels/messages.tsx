@@ -58,6 +58,8 @@ import { toast } from "design-system/toast";
 // import TrackPlayer from "design-system/track-player";
 import React, { useContext } from 'react';
 
+import { useLiveMessages } from "app/providers/live-messages";
+
 import {
   AnimatedInfiniteScrollListWithRef,
   CustomCellRenderer,
@@ -190,6 +192,16 @@ export const Messages = memo(() => {
   const channelDetail = useChannelById(channelId);
   const { data, isLoading, fetchMore, refresh, isLoadingMore, error, refetch } = useChannelMessages(channelId, activeSubgroupId);
 
+  const {
+    data: liveDataUnformatted,
+    isLoading: liveIsLoading,
+    messageCounts,
+    isLoadingMore: liveIsLoadingMore,
+    error: liveError
+  } = useLiveMessages();
+
+  const [isLiveSubgroup, setIsLiveSubgroup] = useState(false);
+
   useEffect(() => {
     if (slug) {
       refresh();
@@ -209,7 +221,7 @@ export const Messages = memo(() => {
   const { refetchMyInfo, data: myInfoData } = useMyInfo();
 
   const [statusUser, setStatusUser] = useState<string>('loading');
-  const [isPremium, setIsPremium] = useState<any>(false);
+  const [isPremiumGoat, setisPremiumGoat] = useState<any>(false);
 
   useEffect(() => {
     if (!myInfoData?.data?.profile?.user_metadata?.channels) {
@@ -388,7 +400,7 @@ export const Messages = memo(() => {
           editMessageItemDimension={editMessageItemDimension}
           edition={null}
           statusUser={statusUser}
-          isPremium={isPremium}
+          isPremiumGoat={false}
           handleOnboard={handleOnboard}
           isUserAdmin={isUserAdmin}
           permissions={channelDetail.data?.permissions}
@@ -403,7 +415,7 @@ export const Messages = memo(() => {
       channelDetail.data?.permissions,
       channelDetail.data?.owner?.profile_id,
       statusUser,
-      isPremium,
+      isPremiumGoat,
       handleOnboard
     ]
   );
@@ -542,7 +554,7 @@ export const Messages = memo(() => {
   });
 
   const channelData = useMemo(() => ({
-    isPremium: (channelDetail.data?.owner as ChannelOwner)?.is_premium,
+    isPremiumGoat: (channelDetail.data?.owner as ChannelOwner)?.is_premium,
     subGroups: (channelDetail.data?.owner as ChannelOwner)?.subGroups || [],
     metadata: (channelDetail.data?.owner as ChannelOwner)?.metadata_with_translations
   }), [channelDetail.data?.owner]);
@@ -591,7 +603,7 @@ export const Messages = memo(() => {
       const bio = bioObj[selectedLanguage] || bioObj?.english;
       const location_code = item?.location_code || '';
       setLocation(location_code);
-      setIsPremium(item.is_premium);
+      setisPremiumGoat(item.is_premium);
       setSubgroups(item.subGroups);
       setName(name);
       setBio(bio);
@@ -604,11 +616,8 @@ export const Messages = memo(() => {
     }
   }, [activeSubgroupId, refetch]);
 
-  // Add logging to track data changes
-  useEffect(() => {
-  }, [data, isLoading, isLoadingMore, error]);
-
   const onSelectSubgroup = (payload: any) => {
+    setIsLiveSubgroup(payload.isLive);
     setActiveSubgroupId(payload.subgroup_id);
   }
 
@@ -659,12 +668,13 @@ export const Messages = memo(() => {
             showCollectToUnlock ? "pb-2" : "",
           ]}
         >
-          <View tw={isPremium ? "flex-1 flex-row" : "flex-1"}>
-            {isPremium && (
+          <View tw={isPremiumGoat ? "flex-1 flex-row" : "flex-1"}>
+            {isPremiumGoat && (
               <SubGroupsSidebar
-                subgroups={subgroups || mockSubgroups}
+                subgroups={subgroups || []}
                 onSelectSubgroup={onSelectSubgroup}
                 activeSubgroupId={activeSubgroupId}
+                messageCounts={messageCounts}
               />
             )}
 
@@ -673,7 +683,7 @@ export const Messages = memo(() => {
                 "flex-1 overflow-hidden px-3",
                 showCollectToUnlock ? "pb-2" : "",
               ]}
-              style={isPremium ? { marginLeft: 60 } : undefined}
+              style={isPremiumGoat ? { marginLeft: 60 } : undefined}
             >
               {isLoading || channelDetail.isLoading ? (
                 <MessageSkeleton />
@@ -681,7 +691,7 @@ export const Messages = memo(() => {
                 <AnimatedInfiniteScrollListWithRef
                   ref={listRef}
                   keyExtractor={keyExtractor}
-                  data={data}
+                  data={isLiveSubgroup ? liveDataUnformatted : data}
                   onEndReached={onLoadMore}
                   inverted
                   getItemType={getItemType}
@@ -697,7 +707,7 @@ export const Messages = memo(() => {
                   }
                   renderItem={renderItem}
                   extraData={extraData}
-                  isPremium={isPremium}
+                  isPremiumGoat={isPremiumGoat}
                   statusUser={statusUser}
                   handleOnboard={handleOnboard}
                   ListHeaderComponent={renderListHeader}
@@ -747,164 +757,3 @@ export const Messages = memo(() => {
 });
 
 Messages.displayName = "Messages";
-
-// Mock subgroups data
-export const mockSubgroups: any = [
-  { id: "all", name: "All Messages", memberCount: 0 },
-  { id: "odd", name: "Odd Messages", memberCount: 0 },
-  { id: "even", name: "Even Messages", memberCount: 0 },
-];
-
-import * as PouchDB from 'pouchdb';
-
-// const db = new PouchDB('messages', {
-//   adapter: typeof window === 'undefined' ? 'asyncstorage' : 'idb',
-// });
-
-// // Context to hold messages and provide actions
-// const LiveChatContext = createContext(null);
-
-// const LiveChatProvider = ({ children, username }) => {
-//   const [messages, setMessages] = useState([]);
-
-//   // Fetch messages from Supabase
-//   const fetchMessages = async () => {
-//     try {
-//       const { data, error } = await supabase
-//         .from('live_messages')
-//         .select('*')
-//         .eq('username', username)
-//         .order('created_at', { ascending: true });
-
-//       if (error) throw error;
-
-//       setMessages(data);
-
-//       // Sync to offline cache
-//       await db.bulkDocs(
-//         data.map((msg) => ({ ...msg, _id: msg.id })) // Use _id for PouchDB
-//       );
-//     } catch (error) {
-//       console.error('Error fetching messages:', error);
-//     }
-//   };
-
-//   // Fetch cached messages from PouchDB
-//   const fetchCachedMessages = async () => {
-//     try {
-//       const result = await db.allDocs({ include_docs: true });
-//       const cachedMessages = result.rows.map((row) => row.doc);
-//       setMessages(cachedMessages);
-//     } catch (error) {
-//       console.error('Error fetching cached messages:', error);
-//     }
-//   };
-
-//   // Handle new message notification
-//   const handleNewMessageNotification = async (message) => {
-//     await Notifications.scheduleNotificationAsync({
-//       content: {
-//         title: 'New Message',
-//         body: `${message.username}: ${message.content}`,
-//       },
-//       trigger: null,
-//     });
-//   };
-
-//   // Real-time subscription
-//   useEffect(() => {
-//     const subscription = supabase
-//       .channel('public:live_messages')
-//       .on(
-//         'postgres_changes',
-//         {
-//           event: 'INSERT',
-//           schema: 'public',
-//           table: 'live_messages',
-//           filter: `username=eq.${username}`,
-//         },
-//         (payload) => {
-//           const newMessage = payload.new;
-//           setMessages((prev) => [...prev, newMessage]);
-
-//           // Sync to cache
-//           db.put({ ...newMessage, _id: newMessage.id }).catch(() => { });
-
-//           // Trigger notification
-//           handleNewMessageNotification(newMessage);
-//         }
-//       )
-//       .subscribe();
-
-//     return () => {
-//       supabase.removeChannel(subscription);
-//     };
-//   }, [username]);
-
-//   // Fetch cached and online messages on mount
-//   useEffect(() => {
-//     fetchCachedMessages();
-//     fetchMessages();
-//   }, []);
-
-//   return (
-//     <LiveChatContext.Provider value={{ messages }}>
-//       {children}
-//     </LiveChatContext.Provider>
-//   );
-// };
-
-// // Custom hook for consuming LiveChat context
-// const useLiveChat = () => {
-//   const context = useContext(LiveChatContext);
-//   if (!context) {
-//     throw new Error('useLiveChat must be used within a LiveChatProvider');
-//   }
-//   return context;
-// };
-
-
-// const LiveChatSub = ({ username }) => {
-//   const { messages } = useLiveChat();
-
-//   return (
-//     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-//       <div className="w-full max-w-md bg-white border border-gray-300 shadow-md rounded-lg p-4">
-//         <div className="h-64 overflow-y-auto mb-4 bg-gray-50 rounded-lg p-2">
-//           {messages.length === 0 ? (
-//             <p className="text-gray-500 text-center">No messages yet from {username}.</p>
-//           ) : (
-//             messages.map((message) => (
-//               <div key={message.id} className="mb-2">
-//                 <strong className="text-blue-600">{message.username}</strong>:{' '}
-//                 <span className="text-gray-700">{message.content}</span>
-//               </div>
-//             ))
-//           )}
-//         </div>
-//         <div className="flex">
-//           <input
-//             type="text"
-//             disabled
-//             placeholder="Type your message... (Disabled in demo)"
-//             className="border border-gray-300 rounded-l-lg flex-1 p-2 bg-gray-200 text-gray-500 cursor-not-allowed"
-//           />
-//           <button
-//             disabled
-//             className="ml-2 p-2 bg-blue-500 text-white rounded-r-lg cursor-not-allowed opacity-50"
-//           >
-//             Send
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const LiveChat = () => {
-//   return (
-//     <LiveChatProvider username="elonmusk">
-//       <LiveChatSub username="elonmusk" />
-//     </LiveChatProvider>
-//   );
-// };

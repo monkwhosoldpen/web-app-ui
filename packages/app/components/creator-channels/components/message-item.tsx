@@ -7,6 +7,7 @@ import Animated, {
   SharedValue,
 } from "react-native-reanimated";
 
+import { Avatar } from "@showtime-xyz/universal.avatar";
 import { useIsDarkMode } from "@showtime-xyz/universal.hooks";
 import { Flag } from "@showtime-xyz/universal.icon";
 import { MoreHorizontal } from "@showtime-xyz/universal.icon";
@@ -41,12 +42,9 @@ import { TwitterBadge } from "./twitter-badge";
 import { useTranslation } from "react-i18next";
 
 import { useEffect, useState } from 'react';
-
+import { ZulipBadge } from "./zulip-badge";
 import { Text } from "@showtime-xyz/universal.text";
-import { AvatarHoverCard } from "app/components/card/avatar-hover-card";
-import { ClampText } from "@showtime-xyz/universal.clamp-text";
 import { Button } from "@showtime-xyz/universal.button";
-import { BlurView } from "@react-native-community/blur";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -56,7 +54,7 @@ export const MessageItem = memo(
     editMessageIdSharedValue,
     permissions,
     statusUser,
-    isPremium,
+    isPremiumGoat,
     handleOnboard,
   }: MessageItemProps & {
     edition?: any;
@@ -65,7 +63,7 @@ export const MessageItem = memo(
     listRef: RefObject<FlashList<any>>;
     channelOwnerProfileId?: number;
     statusUser: string;
-    isPremium: boolean;
+    isPremiumGoat: boolean;
     editMessageIdSharedValue: SharedValue<number | undefined>;
     editMessageItemDimension: SharedValue<{
       height: number;
@@ -108,7 +106,7 @@ export const MessageItem = memo(
     }, [selectedLanguage, item]);
 
     const getBorderColor = (status: string) => {
-      if (isPremium) {
+      if (isPremiumGoat) {
         switch (status) {
           case 'IN_PROGRESS':
             return 'border-orange-500';
@@ -159,7 +157,7 @@ export const MessageItem = memo(
         ? linkifyDescription(
           limitLineBreaks(
             cleanUserTextInput(removeTags(content)),
-            2
+            10
           ),
           "!text-indigo-600 dark:!text-blue-400"
         )
@@ -172,11 +170,11 @@ export const MessageItem = memo(
 
     // Add debug logging
     useEffect(() => {
-    }, [statusUser, isPremium, item]);
+    }, [statusUser, isPremiumGoat, item]);
 
     // Add a function to determine if message should be blurred
     const shouldBlurMessage = () => {
-      const shouldBlur = isPremium && statusUser !== 'APPROVED';
+      const shouldBlur = isPremiumGoat && statusUser !== 'APPROVED';
       return shouldBlur;
     };
 
@@ -185,12 +183,12 @@ export const MessageItem = memo(
 
     // Log when component mounts/updates with key props
     useEffect(() => {
-    }, [item, isPremium, statusUser]);
+    }, [item, isPremiumGoat, statusUser]);
 
     // Log blur state changes
     useEffect(() => {
       const isBlurred = shouldBlurMessage();
-    }, [isPremium, statusUser, item.channel_message?.id, item.channel_message?.body_text_length]);
+    }, [isPremiumGoat, statusUser, item.channel_message?.id, item.channel_message?.body_text_length]);
 
     // Log when onboard button is pressed
     const handleOnboardPress = () => {
@@ -211,65 +209,53 @@ export const MessageItem = memo(
       messageContent
     ]);
 
-    const blurStyles = {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      borderRadius: 8,
-      overflow: 'hidden',
-    } as const;
-
     return (
       <>
         <AnimatedView tw="my-2 px-3" style={style} ref={animatedViewRef}>
-          <View tw="mb-2 mt-2 px-2 md:px-0">
-
-            <LeanView tw="flex-row items-center py-2">
-              <View tw="mt-0">
-                <AvatarHoverCard
-                  tw="rounded-2xl"
-                  username="johndoe"
+          <LeanView tw="flex-row" style={{ columnGap: 8 }}>
+            <Link
+              href={`/@${item.channel_message?.sent_by?.profile?.username}`}
+            >
+              <LeanView tw="h-6 w-6">
+                <Avatar
+                  size={24}
                   url={image_url}
-                  size={40}
                 />
-              </View>
-              <View tw="ml-2 justify-center">
+                <View tw="absolute h-full w-full rounded-full border-[1.4px] border-white/60 dark:border-black/60" />
+              </LeanView>
+            </Link>
+            <LeanView tw="flex-1" style={{ rowGap: 8 }}>
+              <LeanView tw="flex-row items-center" style={{ columnGap: 8 }}>
                 <Link
                   href={`/@${item.channel_message?.sent_by?.profile?.username
                     }`}
-
-                  tw="flex-row items-center"
                 >
-                  {/* <LeanText
+                  <LeanText
                     tw={"text-sm font-bold text-gray-900 dark:text-gray-100"}
                   >
                     {item.channel_message?.sent_by?.profile?.username}
-                  </LeanText> */}
-                  <LeanView tw="flex-row items-center">
-                    <LeanText
-                      tw="text-sm font-bold text-gray-900 dark:text-gray-100"
-                    >
-                      {item.channel_message?.sent_by?.profile?.username}
-                    </LeanText>
-                    {true ? (
-                      <View tw="ml-2">
-                        <TwitterBadge />
-                      </View>
-                    ) : null}
-                  </LeanView>
-
+                  </LeanText>
                 </Link>
 
-                <View tw="h-2" />
-                <Text tw="text-xs text-gray-600 dark:text-gray-400">
-                  {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
-                </Text>
-              </View>
-              <View tw="ml-auto flex-row items-center">
+                <LeanView tw="flex-row items-center">
+                  <LeanText tw={"text-xs text-gray-700 dark:text-gray-200"}>
+                    {formatDateRelativeWithIntl(channel_message?.last_updated || channel_message?.created_at)}
+                  </LeanText>
+                  {true ? (
+                    <View tw="ml-2">
+                      <ZulipBadge />
+                    </View>
+                  ) : null}
+
+                  {/* {true ? (
+                    <View tw="ml-2">
+                      <TwitterBadge />
+                    </View>
+                  ) : null} */}
+                </LeanView>
+
                 <LeanView
-                  tw="mr-0 flex-1 flex-row items-center justify-end"
+                  tw="mr-2 flex-1 flex-row items-center justify-end"
                   style={{
                     gap: 12,
                   }}
@@ -284,7 +270,7 @@ export const MessageItem = memo(
                       })}
                     >
                       <MoreHorizontal
-                        color={isDark ? colors.gray[100] : colors.gray[900]}
+                        color={isDark ? colors.gray[400] : colors.gray[700]}
                         width={20}
                         height={20}
                       />
@@ -318,7 +304,7 @@ export const MessageItem = memo(
                               name: "flag",
                             }}
                           />
-                          <DropdownMenuItemTitle tw="text-gray-700 dark:text-gray-300">
+                          <DropdownMenuItemTitle tw="font-semibold text-gray-700 dark:text-gray-400">
                             Report
                           </DropdownMenuItemTitle>
                         </DropdownMenuItem>
@@ -326,53 +312,47 @@ export const MessageItem = memo(
                     </DropdownMenuContent>
                   </DropdownMenuRoot>
                 </LeanView>
-              </View>
+              </LeanView>
+
+              {item.channel_message?.body_text_length > 0 ? (
+                <LeanText
+                  tw={"text-sm text-gray-900 dark:text-gray-100"}
+                  style={
+                    Platform.OS === "web"
+                      ? {
+                        // @ts-ignore
+                        wordBreak: "break-word",
+                      }
+                      : {}
+                  }
+                >
+                  {messageContent}
+                </LeanText>
+              ) : null}
+
+              {item.channel_message?.attachments?.length > 0 &&
+                item.channel_message?.attachments[0].mime.includes("image") ? (
+                <ImagePreview
+                  attachment={item.channel_message?.attachments[0]}
+                  isViewable={permissions?.can_view_creator_messages}
+                />
+              ) : null}
+
             </LeanView>
 
-            <View
-              tw="my-2 mb-4"
-              style={{ position: 'relative' }}
-            >
-              <View style={isPremium && statusUser !== 'APPROVED' ? { filter: 'blur(8px)' } : {}}>
-                <Text tw="text-15 font-bold text-gray-900 dark:text-white">
-                  {"Amazing NFT"}
-                </Text>
-
-                <View tw="h-3" />
-
-                <View tw="mt-2 items-baseline">
-                  <ClampText
-                    text={messageContent}
-                    maxLines={3}
-                    tw="text-sm text-gray-900 dark:text-gray-100"
-                  />
-                </View>
-
-                {item.channel_message?.attachments?.length > 0 &&
-                  item.channel_message?.attachments[0].mime.includes("image") ? (
-                  <ImagePreview
-                    attachment={item.channel_message?.attachments[0]}
-                    isViewable={permissions?.can_view_creator_messages}
-                  />
-                ) : null}
-              </View>
-
-              {isPremium && statusUser !== 'APPROVED' && (
-                <View tw="absolute inset-0 bg-gray-100/10 dark:bg-gray-900/10 backdrop-blur-md">
-                  <View tw="absolute inset-0 items-center justify-center">
-                    <Button
-                      onPress={handleOnboardPress}
-                      variant="primary"
-                      size="small"
-                      labelTW="font-semibold"
-                    >
-                      Unlock Premium Content
-                    </Button>
-                  </View>
-                </View>
-              )}
-            </View>
-          </View>
+            {isPremiumGoat && statusUser !== 'APPROVED' && (
+              <LeanView tw="absolute inset-0 items-center justify-center bg-black/5">
+                <Button
+                  onPress={handleOnboardPress}
+                  variant="primary"
+                  size="small"
+                  labelTW="font-semibold"
+                >
+                  Unlock Premium Content
+                </Button>
+              </LeanView>
+            )}
+          </LeanView>
         </AnimatedView>
       </>
     );
@@ -380,7 +360,7 @@ export const MessageItem = memo(
   // Update comparison function to include relevant props
   (prevProps, nextProps) => {
     return prevProps.statusUser === nextProps.statusUser &&
-      prevProps.isPremium === nextProps.isPremium &&
+      prevProps.isPremiumGoat === nextProps.isPremiumGoat &&
       prevProps.item.channel_message?.id === nextProps.item.channel_message?.id;
   }
 );
