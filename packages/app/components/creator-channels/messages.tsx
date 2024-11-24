@@ -680,7 +680,7 @@ export const Messages = memo(() => {
 
             <AnimatedView
               tw={[
-                "flex-1 overflow-hidden px-3",
+                "flex-1 overflow-hidden px-0",
                 showCollectToUnlock ? "pb-2" : "",
               ]}
               style={isPremiumGoat ? { marginLeft: 60 } : undefined}
